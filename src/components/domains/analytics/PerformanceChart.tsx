@@ -38,33 +38,44 @@ const chartConfig = {
 const PerformanceChart: React.FC = () => {
   return (
     <div className="h-[300px] w-full overflow-hidden pt-4">
-      <ChartContainer 
-        config={chartConfig} 
+      <ChartContainer
+        config={chartConfig}
         className="h-full w-full"
       >
-        <LineChart 
-          accessibilityLayer 
-          data={mockData} 
+        <LineChart
+          accessibilityLayer
+          data={mockData}
           margin={{ top: 5, right: 30, left: 10, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-          <XAxis 
-            dataKey="date" 
-            stroke="#94a3b8" 
-            fontSize={12} 
-            tickLine={false} 
-            axisLine={false} 
+          <XAxis
+            dataKey="date"
+            stroke="#94a3b8"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
             tickMargin={10}
           />
-          <YAxis 
-            stroke="#94a3b8" 
-            fontSize={12} 
-            tickLine={false} 
-            axisLine={false} 
+          <YAxis
+            yAxisId="left"
+            stroke="#94a3b8"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => value.toLocaleString()}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            stroke="#94a3b8"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
             tickFormatter={(value) => value.toLocaleString()}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Line
+            yAxisId="left"
             type="monotone"
             dataKey="clicks"
             stroke="var(--color-clicks)"
@@ -73,6 +84,7 @@ const PerformanceChart: React.FC = () => {
             activeDot={{ r: 6, strokeWidth: 0 }}
           />
           <Line
+            yAxisId="right"
             type="monotone"
             dataKey="conversions"
             stroke="var(--color-conversions)"
