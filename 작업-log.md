@@ -42,3 +42,10 @@
      그런데 최신 버전을 쓰는 `bcrypt(v5.0.0)` 내부 구조가 업데이트되었는데, 지원이 끊긴 구형 `passlib`이 이를 제대로 인식하지 못하고 **"비밀번호 길이가 72바이트를 넘었어!"** 라며 엉뚱한 착각(버그)을 일으키며 서버 전체를 다운시켜 버린 것입니다.
    - **해결책 (영구 조치):**
      버전을 내리는 임시방편(다운그레이드)을 쓰는 대신, **문제를 일으키는 중간 다리 역할인 `passlib` 모듈을 아예 코드에서 완전히 삭제(Bypass)했습니다.** 그리고 최신 `bcrypt` 라이브러리의 오리지널 함수(`hashpw`, `checkpw`)만 직접 사용하도록 백엔드 핵심 인증 로직(`src/domains/auth/service.py`)을 전면 재작성하여 영구적인 호환성과 안정성을 확보했습니다. (이 수정본이 Render 클라우드에 성공적으로 재배포되어 가입 정상화 완료)
+5. **Cloudflare Pages Edge Runtime 빌드 오류 해결 (Hotfix):**
+   - **증상:** 프론트엔드를 Cloudflare Pages에 무료 호스팅(Deploy) 하려는 과정에서 `/_not-found`, `/login`, `/register` 라우트들이 빌드에 실패(오류 코드 1)하는 현상 발생.
+   - **원인:** Cloudflare 환경은 일반적인 Node.js 서버가 아니라 무거운 연산이 불가능한 가벼운 엣지 네트워크(Edge Platform) 기반이라, 동적 렌더링이 들어가는 페이지(서버 컴포넌트, 서버 액션 등)는 명시적으로 "나는 엣지 환경에서 돌아갑니다"라고 `export const runtime = 'edge';` 선언을 해두어야만 빌드 단계를 통과시킬 수 있습니다.
+   - **해결책:** 문제가 된 `/login`, `/register` 페이지 최상단, 그리고 명시적으로 존재하지 않아 에러를 일으키던 `/_not-found` 페이지를 새로 만들고 최상단에 `export const runtime = 'edge';` 구문을 일괄 추가하여 GitHub에 푸시 완료, 정상 빌드 되도록 조치했습니다.
+6. **배포 환경 변경 (Cloudflare Pages -> Vercel):**
+   - **경과:** Cloudflare Pages의 제한적인 Edge Runtime 제약으로 인해 서버 컴포넌트 구동의 불안정함이 지속됨을 확인. Next.js와 100% 호환되는 Vercel로 프론트엔드 호스팅을 이관하기로 결정했습니다.
+   - **조치:** Cloudflare 빌드 통과를 위해 임시로 끼워 넣었던 모든 `export const runtime = 'edge';` 설정 코드(`/login`, `/register`, `/_not-found`)를 삭제하여 코드를 순정 상태로 되돌리고 깃허브에 푸시 배포 준비를 완료했습니다.

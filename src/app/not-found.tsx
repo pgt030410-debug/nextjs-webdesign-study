@@ -1,7 +1,5 @@
 import Link from 'next/link';
 
-export const runtime = 'edge';
-
 export default function NotFound() {
     return (
         <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat">
