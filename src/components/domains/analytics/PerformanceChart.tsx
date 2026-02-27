@@ -4,25 +4,16 @@
  * Analytics Domain: 광고 클릭(Click) 및 전환(Conversion) 추이를 시각화하는 선형 차트
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Campaign } from '../campaigns/CampaignTable';
 
 interface PerformanceData {
   date: string;
   clicks: number;
   conversions: number;
 }
-
-const mockData: PerformanceData[] = [
-  { date: '02/18', clicks: 1200, conversions: 45 },
-  { date: '02/19', clicks: 1450, conversions: 52 },
-  { date: '02/20', clicks: 1100, conversions: 48 },
-  { date: '02/21', clicks: 1700, conversions: 72 },
-  { date: '02/22', clicks: 1900, conversions: 85 },
-  { date: '02/23', clicks: 1600, conversions: 68 },
-  { date: '02/24', clicks: 2100, conversions: 92 },
-];
 
 const chartConfig = {
   clicks: {
@@ -35,7 +26,53 @@ const chartConfig = {
   },
 };
 
-const PerformanceChart: React.FC = () => {
+interface PerformanceChartProps {
+  campaigns: Campaign[];
+}
+
+const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
+  // 실제 DB에 날짜별 히스토리 레코드가 없으므로, 
+  // '현재 활성화된 캠페인들의 총 예산'에 비례하여 7일간의 우상향 가상 트렌드를 동적으로 계산합니다.
+  // 캠페인을 지우면 차트 전체가 내려가고, 추가하면 위로 솟구치게 되어 실시간 상호작용을 느낄 수 있습니다.
+  const chartData = useMemo(() => {
+    if (campaigns.length === 0) return [];
+
+    const totalBudget = campaigns.reduce((sum, camp) => sum + camp.budget, 0);
+    const avgRoas = campaigns.reduce((sum, camp) => sum + camp.roas, 0) / campaigns.length;
+
+    // 예산 기준 오늘의 추정 클릭/전환
+    const todayClicks = Math.floor(totalBudget / 800); // 800원당 1클릭 가정
+    const todayConversions = Math.floor(todayClicks * (avgRoas / 100)); // ROAS 기반 전환율 추정
+
+    const data: PerformanceData[] = [];
+    const today = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      const dateStr = `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`;
+
+      // 과거로 갈수록 수치가 10~30%씩 무작위로 작아지게 가공하여 트렌드 라인 형성
+      const volatility = 1 - (i * 0.12) + (Math.random() * 0.05 - 0.02);
+
+      data.push({
+        date: dateStr,
+        clicks: Math.max(0, Math.floor(todayClicks * volatility)),
+        conversions: Math.max(0, Math.floor(todayConversions * volatility)),
+      });
+    }
+
+    return data;
+  }, [campaigns]);
+
+  if (chartData.length === 0) {
+    return (
+      <div className="flex h-[300px] w-full items-center justify-center text-sm text-gray-400">
+        차트를 그릴 활성 캠페인 데이터가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="h-[300px] w-full overflow-hidden pt-4">
       <ChartContainer
@@ -44,7 +81,7 @@ const PerformanceChart: React.FC = () => {
       >
         <LineChart
           accessibilityLayer
-          data={mockData}
+          data={chartData}
           margin={{ top: 5, right: 30, left: 10, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />

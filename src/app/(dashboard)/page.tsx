@@ -117,7 +117,7 @@ export default async function PerformancePlatformPage() {
               <p className="text-sm text-gray-400">Clicks and conversions over the last 7 days</p>
             </CardHeader>
             <CardContent>
-              <PerformanceChart />
+              <PerformanceChart campaigns={campaigns} />
             </CardContent>
           </Card>
         </div>
