@@ -39,14 +39,21 @@ const summaryStats: SummaryStat[] = [
 
 async function getCampaigns(): Promise<{ data: Campaign[], error: string | null }> {
   try {
+    // Cloudflare Edge 환경에서 자신의 API Route(/api/campaigns)를 부를 때 
+    // 절대경로 문제나 봇 인증(403) 문제가 발생할 수 있습니다.
+    // 서버 컴포넌트(SSR) 단계이므로 프록시를 안 거치고 백엔드(Render)로 다이렉트 호출합니다.
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
-    // Next.js App Router Server Component fetch
+
+    // 백엔드 다이렉트 주소 연결 (주의: FastAPI 라우터는 끝에 슬래시(/)가 필요함)
     const res = await fetch(`${apiUrl}/campaigns/?organization_id=12`, {
-      cache: 'no-store', // Always fetch fresh data
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      }
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch: ${res.status}`);
+      throw new Error(`Failed to fetch backend: ${res.status}`);
     }
     const data = await res.json();
     return { data, error: null };
