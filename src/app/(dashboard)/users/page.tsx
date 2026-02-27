@@ -5,14 +5,14 @@ import { Users as UsersIcon } from 'lucide-react';
 export default function UsersPage() {
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">Users</h1>
                     <p className="mt-2 text-sm text-gray-500">
                         Manage your organization's team members and permissions here.
                     </p>
                 </div>
-                <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition-colors">
+                <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition-colors shrink-0">
                     Invite User
                 </button>
             </div>
