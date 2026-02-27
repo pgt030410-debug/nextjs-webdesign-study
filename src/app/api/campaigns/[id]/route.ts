@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUser } from '@/app/actions/auth';
 
 export const runtime = 'edge';
 
@@ -9,8 +10,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { searchParams } = new URL(request.url);
-  const organizationId = searchParams.get('organization_id') || '12';
+
+  const user = await getAuthUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   if (!id) {
     return NextResponse.json({ error: 'id is required' }, { status: 400 });
@@ -18,8 +22,8 @@ export async function DELETE(
 
   try {
     // FastAPI는 /campaigns/{id}/ 형태를 선호하거나, 리다이렉트를 발생시킬 수 있습니다.
-    const backendUrl = `${BACKEND_URL}/${id}/?organization_id=${organizationId}`;
-    
+    const backendUrl = `${BACKEND_URL}/${id}/?organization_id=${user.organization_id}`;
+
     console.log(`Forwarding DELETE to: ${backendUrl}`);
 
     const response = await fetch(backendUrl, {
@@ -30,11 +34,11 @@ export async function DELETE(
       // 백엔드에서 보내는 에러 상세 내용을 텍스트로 읽어옵니다.
       const errorDetail = await response.text();
       console.error(`Backend DELETE error (${response.status}):`, errorDetail);
-      
-      return NextResponse.json({ 
-        error: 'Backend error', 
+
+      return NextResponse.json({
+        error: 'Backend error',
         status: response.status,
-        detail: errorDetail 
+        detail: errorDetail
       }, { status: response.status });
     }
 

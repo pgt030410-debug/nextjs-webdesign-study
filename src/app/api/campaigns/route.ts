@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUser } from '@/app/actions/auth';
 
 export const runtime = 'edge';
 
@@ -6,15 +7,13 @@ export const runtime = 'edge';
 const BACKEND_URL = 'https://nextjs-webdesign-study.onrender.com/campaigns/';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const organizationId = searchParams.get('organization_id');
-
-  if (!organizationId) {
-    return NextResponse.json({ error: 'organization_id is required' }, { status: 400 });
+  const user = await getAuthUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const backendUrl = `${BACKEND_URL}?organization_id=${organizationId}`;
+    const backendUrl = `${BACKEND_URL}?organization_id=${user.organization_id}`;
     const response = await fetch(backendUrl, {
       cache: 'no-store',
     });
@@ -22,10 +21,10 @@ export async function GET(request: NextRequest) {
     if (!response.ok) {
       const errorDetail = await response.text();
       console.error(`Backend GET error (${response.status}):`, errorDetail);
-      return NextResponse.json({ 
-        error: 'Backend error', 
+      return NextResponse.json({
+        error: 'Backend error',
         status: response.status,
-        detail: errorDetail 
+        detail: errorDetail
       }, { status: response.status });
     }
 
@@ -38,13 +37,17 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const organizationId = searchParams.get('organization_id') || '12';
+  const user = await getAuthUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   try {
     const body = await request.json();
-    const backendUrl = `${BACKEND_URL}?organization_id=${organizationId}`;
-    
+    // 덮어쓰기 방어를 위해 body 내부의 organization_id를 무시하고 서버의 user.organization_id로 강제 세팅
+    const payload = { ...body, organization_id: user.organization_id };
+    const backendUrl = `${BACKEND_URL}?organization_id=${user.organization_id}`;
+
     console.log(`Forwarding POST to: ${backendUrl}`);
 
     const response = await fetch(backendUrl, {
@@ -52,16 +55,16 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Backend POST error (${response.status}):`, errorText);
-      return NextResponse.json({ 
-        error: 'Backend error', 
+      return NextResponse.json({
+        error: 'Backend error',
         status: response.status,
-        detail: errorText 
+        detail: errorText
       }, { status: response.status });
     }
 
