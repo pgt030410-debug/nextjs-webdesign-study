@@ -35,25 +35,27 @@ const InsightCard: React.FC = () => {
         <Sparkles size={18} className="text-blue-600" />
         <h3 className="font-bold text-gray-900">AI Performance Insights</h3>
       </div>
-      {mockInsights.map((insight) => (
-        <Card key={insight.id} className="border-gray-200 shadow-none bg-white">
-          <CardHeader className="p-4 pb-2">
-            <CardTitle className="text-sm font-semibold flex items-center justify-between">
-              {insight.title}
-              {insight.type === 'positive' ? (
-                <ArrowUpRight size={16} className="text-blue-600" />
-              ) : (
-                <AlertCircle size={16} className="text-gray-400" />
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 pt-0">
-            <p className="text-xs text-gray-600 leading-relaxed">
-              {insight.content}
-            </p>
-          </CardContent>
-        </Card>
-      ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+        {mockInsights.map((insight) => (
+          <Card key={insight.id} className="border-gray-200 shadow-none bg-white">
+            <CardHeader className="p-4 pb-2">
+              <CardTitle className="text-sm font-semibold flex items-center justify-between">
+                {insight.title}
+                {insight.type === 'positive' ? (
+                  <ArrowUpRight size={16} className="text-blue-600" />
+                ) : (
+                  <AlertCircle size={16} className="text-gray-400" />
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0">
+              <p className="text-xs text-gray-600 leading-relaxed">
+                {insight.content}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

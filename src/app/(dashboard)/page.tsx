@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, MousePointer2, Target } from 'lucide-react';
+import { Wallet, MousePointer2, Target, Activity } from 'lucide-react';
 import PerformanceChart from '@/components/domains/analytics/PerformanceChart';
 import InsightCard from '@/components/domains/insights/InsightCard';
 import CampaignList from '@/components/domains/campaigns/CampaignList';
@@ -81,12 +81,18 @@ export default async function PerformancePlatformPage() {
       subValue: 'Estimated from ad budget',
       icon: Target,
     },
+    {
+      title: 'Active Campaigns',
+      value: campaigns.length.toLocaleString(),
+      subValue: 'Currently running',
+      icon: Target, // Or another suitable icon like Activity if available
+    },
   ];
 
   return (
     <div className="flex flex-col gap-8">
       {/* 1. Upper Summary Stats */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {dynamicStats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -107,7 +113,7 @@ export default async function PerformancePlatformPage() {
       </div>
 
       {/* 2. Middle Section: Analytics (7) & Insights (3) */}
-      <div className="grid gap-8 lg:grid-cols-10">
+      <div className="grid gap-8 grid-cols-1 lg:grid-cols-10">
         <div className="lg:col-span-7">
           <Card className="border-gray-200 shadow-sm h-full">
             <CardHeader>
