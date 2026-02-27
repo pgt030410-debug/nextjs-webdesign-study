@@ -5,6 +5,7 @@ import { AlertCircle, Plus } from 'lucide-react';
 import CampaignTable, { Campaign } from './CampaignTable';
 import CampaignModal from './CampaignModal';
 import { useRouter } from 'next/navigation';
+import { deleteCampaign } from '@/app/actions/campaigns';
 
 interface CampaignListProps {
     initialCampaigns: Campaign[];
@@ -22,16 +23,7 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
 
     const handleDeleteCampaign = async (id: number) => {
         try {
-            const response = await fetch(`/api/campaigns/${id}?organization_id=12`, {
-                method: 'DELETE',
-            });
-
-            if (!response.ok) {
-                throw new Error('캠페인 삭제 중 에러가 발생했습니다.');
-            }
-
-            // Refresh table via server refresh
-            router.refresh();
+            await deleteCampaign(id);
         } catch (err) {
             alert(err instanceof Error ? err.message : '삭제 실패');
         }

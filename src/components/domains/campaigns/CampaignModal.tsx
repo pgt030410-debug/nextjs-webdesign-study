@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { createCampaign } from '@/app/actions/campaigns';
 
 interface CampaignModalProps {
   isOpen: boolean;
@@ -23,24 +24,12 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/campaigns?organization_id=12', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          budget: parseFloat(formData.budget),
-          roas: parseFloat(formData.roas),
-          status: 'active',
-          // organization_id: 12, // 백엔드에서 자동 주입하므로 선택 사항
-        }),
-      });
+      const form = e.target as HTMLFormElement;
+      const formDataToSubmit = new FormData(form);
+      formDataToSubmit.set('budget', formData.budget);
+      formDataToSubmit.set('roas', formData.roas);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create campaign');
-      }
+      await createCampaign(formDataToSubmit);
 
       onSuccess();
       onClose();
