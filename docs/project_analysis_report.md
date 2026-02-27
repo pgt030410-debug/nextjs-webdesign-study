@@ -5,7 +5,7 @@
 ## 🎯 1. 프로젝트 개요 (Overview)
 이 프로젝트는 **B2B SaaS 형태의 AI 마케팅 퍼포먼스 플랫폼**입니다. 사용자는 이 플랫폼을 통해 광고 지출(Ad Spend), 평균 클릭률(Avg. CTR), 총 전환수(Total Conversions) 등의 핵심 성과 지표를 대시보드에서 실시간으로 확인하고 마케팅 캠페인을 관리(생성/조회/삭제)할 수 있습니다.
 
-프론트엔드는 Next.js 기반으로 풍부한 UI/UX를 제공하며, 백엔드는 Python FastAPI와 SQLModel을 사용하여 빠르고 안정적인 API를 제공하는 분리된(Full-Stack) 구조를 가지고 있습니다.
+본 프로젝트는 초기에 클라우드(Firebase Studio) 환경에서 부트스트랩 되었으나, 현재는 **사용자의 로컬 Windows 환경 및 Antigravity AI** 환경으로 이관되어 개발이 진행되고 있습니다. 프론트엔드는 Next.js 기반으로 풍부한 UI/UX를 제공하며, 백엔드는 Python FastAPI와 SQLModel을 사용하여 빠르고 안정적인 API를 제공하는 분리된(Full-Stack) 구조를 가지고 있습니다.
 
 ---
 

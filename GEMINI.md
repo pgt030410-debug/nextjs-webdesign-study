@@ -1,10 +1,10 @@
-# **AI Development Guidelines for Next.js in Firebase Studio**
+# **AI Development Guidelines for Next.js in Local Windows Setup**
 
-These guidelines define the operational principles and capabilities of an AI agent (e.g., Gemini) interacting with Next.js projects within the Firebase Studio environment. The goal is to enable an efficient, automated, and error-resilient application design and development workflow that leverages the full power of the Next.js framework.
+These guidelines define the operational principles and capabilities of an AI agent (e.g., Gemini/Antigravity) interacting with Next.js projects within a Local Windows Development environment. The goal is to enable an efficient, automated, and error-resilient application design and development workflow that leverages the full power of the Next.js framework.
 
 ## **Environment & Context Awareness**
 
-The AI operates within the Firebase Studio development environment, which provides a Code OSS-based IDE and a pre-configured environment for Next.js development.
+The AI operates within a standard local Windows PC environment navigated by the Antigravity AI agent.
 
 * **Project Structure (App Router):** The AI assumes a standard Next.js project structure using the App Router.
   * `/app`: The core directory for file-based routing.
@@ -12,26 +12,7 @@ The AI operates within the Firebase Studio development environment, which provid
   * `page.tsx`: The page UI for a route.
   * `/components`: For reusable UI components.
   * `/lib`: For utility functions and libraries.
-* **`dev.nix` Configuration:** The AI is aware of the `.idx/dev.nix` file for environment configuration, which includes `pkgs.nodejs` and other necessary tools.
-* **Preview Server:** Firebase Studio provides a running preview server. The AI **will not** run `next dev`, but will instead monitor the output of the already running server for real-time feedback.
-* **Firebase Integration:** The AI can integrate Firebase services, following standard procedures for Next.js projects, including using the Firebase Admin SDK in server-side code.
-
-## Firebase MCP
-
-When requested for Firebase add the following the server configurations to .idx/mcp.json. Just add the following and don't add anything else.
-
-{
-    "mcpServers": {
-        "firebase": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "firebase-tools@latest",
-                "experimental:mcp"
-            ]
-        }
-    }
-}
+* **Running the Servers:** Since this is a local environment, the AI understands that the user must start the development servers manually in their Windows Command Prompt or PowerShell (`npm run dev`). The AI will **NOT** assume there is a pre-running preview server like in cloud IDEs.
 
 ## **Code Modification & Dependency Management**
 
@@ -142,9 +123,9 @@ The AI's workflow is iterative, transparent, and responsive to user input.
 * **Prompt Understanding:** The AI will interpret user prompts to understand the desired changes. It will ask clarifying questions if the prompt is ambiguous.
 * **Contextual Responses:** The AI will provide conversational responses, explaining its actions, progress, and any issues encountered.
 * **Error Checking Flow:**
-  1. **Important:** The AI will **not** start the dev server (`next dev`), as it is already managed by Firebase Studio.
+  1. **Important:** The AI understands this is a local Windows environment. The development server must be run by the user via terminal (`npm run dev`) or started actively by the AI if path/environments permit.
   2. **Code Change:** AI applies a code modification.
   3. **Dependency Check:** If a new package is needed, AI runs `npm install`.
-  4. **Compile & Analyze:** AI runs `npm run lint` and monitors the dev server.
-  5. **Preview Check:** AI observes the browser preview for visual and runtime errors.
+  4. **Compile & Analyze:** AI runs `npm run lint` or reviews terminal output.
+  5. **Preview Check:** User observes the browser preview at `http://localhost:3000` for visual and runtime errors.
   6. **Remediation/Report:** If errors are found, AI attempts automatic fixes. If unsuccessful, it reports details to the user.

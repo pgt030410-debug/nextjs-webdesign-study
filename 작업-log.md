@@ -23,3 +23,15 @@
     - `page.tsx`에 Route Protection을 걸어 비로그인 시 `/login`으로 리다이렉트 시키고, API 호출 시 하드코딩된 `12`가 아닌 JWT 토큰의 실제 `organization_id`를 사용하도록 연결(Multi-Tenancy 기초)했습니다.
 5.  **API 프록시(Proxy) 보안 및 토큰 연동 강화:** 
     - 프론트엔드에서 쿼리 파라미터(`?organization_id=12`)로 넘기던 취약한 방식을 버리고, `src/app/api/campaigns/route.ts` 등의 서버 API 엔드포인트 자체적으로 쿠키를 읽어 `organization_id`를 파싱하여 백엔드로 넘기도록 수정했습니다.
+
+---
+
+## 📅 2026-02-27 (환경 이관 및 마이그레이션)
+
+### 👤 사용자 요청 사항 (User Request)
+> "너가 로컬로 돌아가게 바꾼거 아니야? Firebase Studio에서 작업하던걸 Antigravity로 가져왔는데, md 파일들이 엉망이면 할루시네이션 나잖아. 파일들을 수정해줘."
+
+### 🤖 AI 실행 내역 (AI Actions)
+1. **환경 인지 오류 파악:** 프로젝트 루트의 `GEMINI.md` 파일에 종속된 Firebase Studio / Nix 컨테이너 기반 프롬프트로 인해 로컬 PC에서의 서버 구동 관련 할루시네이션(환각)이 발생했음을 인지했습니다.
+2. **가이드라인(`GEMINI.md`) 전면 개편:** Nix, IDE 내장 Web Preview, Firebase MCP 관련 지시 사항을 완전 삭제하고, **"로컬 Windows + Antigravity 개발 환경"**을 기준으로 터미널을 통한 `npm run dev` 수동 구동 지침으로 시스템 프롬프트를 재작성했습니다.
+3. **분석 보고서(`docs/project_analysis_report.md`) 최신화:** 프로젝트 생태계가 클라우드에서 로컬 PC 환경으로 마이그레이션 되었음을 명시하여 향후 AI가 환경에 대해 오판하지 않도록 안전장치를 마련했습니다.
