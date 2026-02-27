@@ -49,3 +49,9 @@
 6. **배포 환경 변경 (Cloudflare Pages -> Vercel):**
    - **경과:** Cloudflare Pages의 제한적인 Edge Runtime 제약으로 인해 서버 컴포넌트 구동의 불안정함이 지속됨을 확인. Next.js와 100% 호환되는 Vercel로 프론트엔드 호스팅을 이관하기로 결정했습니다.
    - **조치:** Cloudflare 빌드 통과를 위해 임시로 끼워 넣었던 모든 `export const runtime = 'edge';` 설정 코드(`/login`, `/register`, `/_not-found`)를 삭제하여 코드를 순정 상태로 되돌리고 깃허브에 푸시 배포 준비를 완료했습니다.
+
+### 🏃 Phase 2: 서브 페이지 및 상태 관리 연동 시작
+7. **대시보드 Route Group 바탕 공사 및 서브 페이지 생성:**
+   - **문제:** 기존 루트 레이아웃(`src/app/layout.tsx`)에 사이드바와 헤더가 박혀 있어서 로그인/회원가입 화면에서도 비정상적으로 사이드바가 노출되는 UI 결함 존재.
+   - **해결:** Next.js의 `(dashboard)` Route Group 폴더를 신설하여 대시보드 안쪽에서만 렌더링될 전용 레이아웃 분리 적용 완료.
+   - **페이지 추가:** 사이드바 메뉴에 매핑되도록 `/users` (팀 유저 관리) 및 `/settings` (계정 세팅) 라우트에 반응형 Skeleton UI 화면을 신규 생성하여 클릭 시 즉시 화면이 전환되도록 구현.
