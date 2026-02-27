@@ -35,8 +35,8 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      <table className="w-full border-collapse text-left text-sm text-gray-700">
+    <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+      <table className="w-full min-w-[600px] border-collapse text-left text-sm text-gray-700">
         <thead className="bg-gray-50 font-medium text-gray-500">
           <tr>
             <th className="px-6 py-4">Campaign Name</th>
@@ -55,9 +55,8 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
               <td className="px-6 py-4 text-right font-mono">{campaign.budget.toLocaleString()}</td>
               <td className="px-6 py-4 text-center font-bold text-blue-600">{campaign.roas}x</td>
               <td className="px-6 py-4 text-center">
-                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  campaign.status === 'active' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-700'
-                }`}>
+                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${campaign.status === 'active' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-700'
+                  }`}>
                   {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                 </span>
               </td>

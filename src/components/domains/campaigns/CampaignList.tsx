@@ -6,6 +6,7 @@ import CampaignTable, { Campaign } from './CampaignTable';
 import CampaignModal from './CampaignModal';
 import { useRouter } from 'next/navigation';
 import { deleteCampaign } from '@/app/actions/campaigns';
+import toast from 'react-hot-toast';
 
 interface CampaignListProps {
     initialCampaigns: Campaign[];
@@ -24,8 +25,9 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
     const handleDeleteCampaign = async (id: number) => {
         try {
             await deleteCampaign(id);
+            toast.success('캠페인이 성공적으로 삭제되었습니다.');
         } catch (err) {
-            alert(err instanceof Error ? err.message : '삭제 실패');
+            toast.error(err instanceof Error ? err.message : '캠페인 삭제에 실패했습니다.');
         }
     };
 

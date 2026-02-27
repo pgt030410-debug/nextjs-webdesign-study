@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { createCampaign } from '@/app/actions/campaigns';
+import toast from 'react-hot-toast';
 
 interface CampaignModalProps {
   isOpen: boolean;
@@ -34,9 +35,10 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
       onSuccess();
       onClose();
       setFormData({ name: '', advertiser: '', budget: '', roas: '' });
+      toast.success('새 캠페인이 추가되었습니다.');
     } catch (error: any) {
       console.error('Error creating campaign:', error);
-      alert(`캠페인 생성 중 에러가 발생했습니다: ${error.message}`);
+      toast.error(`캠페인 생성 실패: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }

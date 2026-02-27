@@ -6,9 +6,9 @@ const Header = async () => {
   const user = await getAuthUser();
 
   return (
-    <header className="fixed right-0 top-0 z-10 flex h-16 w-[calc(100%-16rem)] items-center justify-between border-b border-gray-200 bg-white px-8">
+    <header className="fixed right-0 top-0 z-10 flex h-16 w-full md:w-[calc(100%-16rem)] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-8 pl-14 md:pl-8 transition-all">
       <div className="flex-1">
-        <h1 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Overview</h1>
+        <h1 className="text-sm font-semibold text-gray-700 uppercase tracking-wider hidden sm:block">Overview</h1>
       </div>
       <div className="flex items-center gap-4">
         {user ? (

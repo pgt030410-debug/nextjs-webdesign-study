@@ -12,12 +12,12 @@ export default function DashboardLayout({
             <Sidebar />
 
             {/* Right Area */}
-            <div className="ml-64 flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col md:ml-64 w-full">
                 {/* Top Header */}
                 <Header />
 
                 {/* Main Content Area */}
-                <main className="mt-16 min-h-[calc(100vh-4rem)] p-8">
+                <main className="mt-16 min-h-[calc(100vh-4rem)] p-4 md:p-8">
                     {children}
                 </main>
             </div>
