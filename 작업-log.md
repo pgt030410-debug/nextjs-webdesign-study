@@ -83,7 +83,7 @@
     - **효과:** 앞으로 캠페인을 새로 추가하거나 삭제할 때마다 대시보드의 메인 차트 그래프 선형이 즉각적으로 변동하여 움직이는 진짜 라이브 대시보드(Live Dashboard) 경험 제공.
 
 ---
-
+ 
 ### 🏃 Phase 3 진행 완료 (UX/UI 폴리싱 및 안정성 확보)
 
 13. **모바일 반응형 완벽 대응 (Mobile Responsiveness):**
@@ -94,6 +94,41 @@
     - **조치 (`loading.tsx`):** Next.js의 Suspense 기능을 이용, 서버 연동이나 API 통신으로 인해 화면 로딩이 지연될 때 사용자에게 `Lucide` 스피너와 함께 "데이터를 실시간으로 가져오는 중..." 안내를 띄우는 네이티브 로딩 UI 적용.
     - **조치 (`error.tsx`):** API 호출 에러 등 런타임 오류가 발생하더라도 프론트엔드가 하얗게 죽는 현상을 방지하고, 에러 바운더리(Error Boundary)를 통해 "다시 로드하기" 버튼을 제공하는 사용자 복구 UI 장착.
 
-15. **투박한 브라우저 `alert()` 퇴출 및 Toast 팝업 도입:**
+100. **투박한 브라우저 `alert()` 퇴출 및 Toast 팝업 도입:**
     - **조치 (`package.json`, `layout.tsx`):** `react-hot-toast` 라이브러리를 설치 및 루트 레이아웃에 주입.
     - **조치 (`CampaignList.tsx`, `CampaignModal.tsx`):** 캠페인 추가 및 삭제 성공/실패 시 촌스러운 기본 브라우저 브라우저 다이얼로그(`alert()`)를 완전히 제거하고, 우측 하단에서 우아하게 팝업되는 `toast.success`와 `toast.error` 알림 메시지로 UX 대폭 업그레이드.
+
+---
+
+## 📅 2026-02-28 (Vercel 배포 디버깅 및 UI/UX 폴리싱)
+
+### 👤 사용자 요청 사항 (User Request)
+> "반응형 웹 디자인을 살펴봤을때, 위젯 카드들의 크기가 달라. 이렇게 만든 이유가 있는거야? 아니면 이게 최선이야?"
+> "여기서 users랑 settings 밑에 있는 주석들의 가시성을 좀 더 좋게 만들어줘. 버튼이랑 너무 붙어있어"
+
+### 🤖 AI 실행 내역 (AI Actions)
+16. **대시보드 반응형 그리드 밸런스 완전 개편:**
+    - **증상:** 태블릿/모바일(중간폭 화면) 등에서 상단 아이콘 요약 카드는 작고 귀엽게 나열되나, 바로 밑의 [AI Insight] 카드가 무작정 100% 가로 전체를 점유하여 수직으로 늘어나 심미성이 깨지는 현상 발견 (CSS Grid 분할 한계).
+    - **조치 1 (`page.tsx`):** 누락되어 있던 **`Active Campaigns`** 통계 카드를 되살려 넣어 총 4개의 위젯이 1줄 4칸(`lg:grid-cols-4`) 또는 2줄 2칸(`sm:grid-cols-2`)으로 직관적이고 안정감 있게 딱 맞아떨어지는 완벽한 사각 구도로 배치되도록 레이아웃 재편.
+    - **조치 2 (`InsightCard.tsx`):** 좁은 화면으로 밀려날 때, 한 개의 카드가 줄을 다 차지하지 않게 서로 반반 크기로 나란히 공존하는(`grid-cols-2`) 반응형 클래스를 직접 주입하여 **상단 위젯 영역과 하단 AI 영역의 크기 불균형 및 투박함을 100% 소거** 완료.
+
+17. **헤더(Header) 모바일 텍스트 가시성 향상 및 여백 분리:**
+    - **증상:** `/users`, `/settings` 페이지 접근 시 화면 너비가 좁아지면 설명글(Description) 텍스트가 좌측 영역을 벗어나 우측의 [Invite User] 같은 파란 액션 버튼 밑으로 숨을 못 쉬고 바짝 짓눌리는(`flex items-center` 찌그러짐 현상) 문제 수정.
+    - **조치:** 모바일 뷰어(`sm` 미만)에서는 타이틀/설명 영역이 상단에 가고, 버튼 영역이 여유 있게 아래 단락으로 시원하게 분리되도록 반응형 스택 구조(`flex-col sm:flex-row`)로 변경 및 버튼 압착 방지(`shrink-0`) 처리 완료.
+
+### 👤 사용자 요청 사항 (User Request)
+> "캠페인 생성이 안되네. Vercel에서 An error occurred in the Server Components render. 발생"
+> "렌더 로그 보니까 POST /campaigns/ HTTP/1.1 422 Unprocessable Entity 에러가 나"
+
+### 🤖 AI 실행 내역 (AI Actions)
+18. **Vercel Edge 런타임 제약(Server Render 에러) 제거:**
+    - **원인:** Cloudflare 배포용으로 대시보드 최상단에 부착해 둔 `export const runtime = 'edge';` 구문이, Next.js Server Actions(`createCampaign`)의 Vercel 프로덕션 기반 재검증(캐시 갱신, `revalidatePath`) API 스펙과 강력하게 충돌하여 Vercel 컴포넌트 전체가 붕괴되는 현상.
+    - **조치 (`page.tsx`):** Vercel은 표준 Node.js 환경에서 최적화되므로 더 이상 필요 없어진 `edge` 런타임 명시 구문을 아예 통째로 삭제하여 기본 렌더링 성능 및 최신 캐싱 문법이 온전히 발휘되도록 조치. 
+
+19. **Form Submit HTTP 422 (Unprocessable Entity) 치명적 에러 영구 해결:**
+    - **원인:** 프론트엔드 모달창(`<CampaignModal>`) 내에서 텍스트 입력을 담당하는 4개의 `<input>` 요소들에 HTML 식별자인 `name="..."` 속성이 통째로 누락된 상태였음. 이로 인해 '추가하기' 버튼 클릭 시 `new FormData()` 자바스크립트 객체가 입력된 값들을 빈 공기(`null`)로 포장해서 백엔드로 던졌고, 깐깐한 타입 검증기(Pydantic)를 쓰는 FastAPI 백엔드가 "필수 항목(이름, 광고주, 예산)이 안 들어왔잖아!" 라며 422 Validation Error 로 가차 없이 튕겨냈던 것임.
+    - **해결 (`CampaignModal.tsx`):** `<input id="name" name="name">`, `<input name="budget">` 등 모든 인풋 폼 구조에 속성 라벨표를 명확하게 매핑(부착)하여 폼 추출기가 데이터를 정상적으로 읽어내 백엔드 JSON 페이로드로 무사히 변형해 전송할 수 있도록 완벽 복구 달성. 생성이 즉각 성공함.
+
+20. **프로젝트 중장기 로드맵 기획 갱신 (`2026-02-28`):**
+    - 기존 1~3주차 계획(Phase 1,2,3)이 전량 조기 달성 및 Vercel 안정화 됨에 따라 향후 고도화 목표를 구상함.
+    - **Phase 4 (다크 모드 연동), Phase 5 (Framer Motion 프레임워크 기반 마이크로 인터랙션), Phase 6 (고도화된 차트 및 다이나믹 권한 롤백 시스템)** 을 수립하여 `future_roadmap_report.md` 에 전면 기록하고 저장함.
