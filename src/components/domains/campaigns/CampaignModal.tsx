@@ -59,6 +59,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
             <label htmlFor="name" className="text-sm font-medium text-gray-700">캠페인명</label>
             <input
               id="name"
+              name="name"
               type="text"
               required
               className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
@@ -72,6 +73,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
             <label htmlFor="advertiser" className="text-sm font-medium text-gray-700">광고주</label>
             <input
               id="advertiser"
+              name="advertiser"
               type="text"
               required
               className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
@@ -86,6 +88,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
               <label htmlFor="budget" className="text-sm font-medium text-gray-700">예산 (KRW)</label>
               <input
                 id="budget"
+                name="budget"
                 type="number"
                 required
                 className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
@@ -98,6 +101,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
               <label htmlFor="roas" className="text-sm font-medium text-gray-700">Target ROAS</label>
               <input
                 id="roas"
+                name="roas"
                 type="number"
                 step="0.1"
                 required
