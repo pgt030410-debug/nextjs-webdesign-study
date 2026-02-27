@@ -33,5 +33,9 @@
 
 ### 🤖 AI 실행 내역 (AI Actions)
 1. **환경 인지 오류 파악:** 프로젝트 루트의 `GEMINI.md` 파일에 종속된 Firebase Studio / Nix 컨테이너 기반 프롬프트로 인해 로컬 PC에서의 서버 구동 관련 할루시네이션(환각)이 발생했음을 인지했습니다.
-2. **가이드라인(`GEMINI.md`) 전면 개편:** Nix, IDE 내장 Web Preview, Firebase MCP 관련 지시 사항을 완전 삭제하고, **"로컬 Windows + Antigravity 개발 환경"**을 기준으로 터미널을 통한 `npm run dev` 수동 구동 지침으로 시스템 프롬프트를 재작성했습니다.
+2. **가이드라인(`GEMINI.md`) 전면 개편:** Nix, IDE 내장 Web Preview, Firebase MCP 관련 지시 사항을 완전 삭제하고, **"로컬 Windows + Antigravity 개발 환경"**을 기준으로 터미널을 통한 `npm run 기dev` 수동 구동 지침으로 시스템 프롬프트를 재작성했습니다.
 3. **분석 보고서(`docs/project_analysis_report.md`) 최신화:** 프로젝트 생태계가 클라우드에서 로컬 PC 환경으로 마이그레이션 되었음을 명시하여 향후 AI가 환경에 대해 오판하지 않도록 안전장치를 마련했습니다.
+4. **회원가입 "Failed to fetch" 백엔드 종속성 버그 해결 (Hotfix):**
+   - 백엔드의 `/auth/signup` API가 500 내부 서버 오류를 반환하며 크롬 콘솔에서 'Failed to fetch' 에러를 유발하는 현상을 진단했습니다.
+   - 원인은 백엔드의 비밀번호 해싱 라이브러리인 `passlib==1.7.4`와 최신 `bcrypt==5.0.0` 버전 간의 C 파이썬 호환성 충돌이었습니다.
+   - `b2b-saas-backend/requirements.txt`에서 `bcrypt`의 버전을 안전한 `3.2.0`으로 다운그레이드하고 Github에 푸시하여 Render 백엔드 자동 재배포를 트리거했습니다.
