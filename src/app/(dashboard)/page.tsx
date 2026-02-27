@@ -16,27 +16,6 @@ interface SummaryStat {
   icon: React.ElementType;
 }
 
-const summaryStats: SummaryStat[] = [
-  {
-    title: 'Total Ad Spend',
-    value: '₩28,500,000',
-    subValue: '+12.5% from last month',
-    icon: Wallet,
-  },
-  {
-    title: 'Avg. CTR',
-    value: '3.42%',
-    subValue: '+0.8% from last month',
-    icon: MousePointer2,
-  },
-  {
-    title: 'Total Conversions',
-    value: '1,284',
-    subValue: '+24.1% from last month',
-    icon: Target,
-  },
-];
-
 import { getAuthUser } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
 
@@ -73,11 +52,42 @@ export default async function PerformancePlatformPage() {
 
   const { data: campaigns, error } = await getCampaigns(user.organization_id);
 
+  // 데이터 기반 동적 통계 위젯 계산
+  const totalSpend = campaigns.reduce((acc, curr) => acc + curr.budget, 0);
+
+  // 예시 연산: DB에 CTR이나 Conversion이 없으므로 임의로 예산과 ROAS 기반으로 추정값을 전시
+  const avgRoas = campaigns.length > 0
+    ? campaigns.reduce((acc, curr) => acc + curr.roas, 0) / campaigns.length
+    : 0;
+
+  const estimatedConversions = Math.floor(totalSpend / 50000); // 5만원당 1건 전환 가정
+
+  const dynamicStats: SummaryStat[] = [
+    {
+      title: 'Total Ad Spend',
+      value: `₩${totalSpend.toLocaleString()}`,
+      subValue: 'Based on active campaigns',
+      icon: Wallet,
+    },
+    {
+      title: 'Avg. ROAS',
+      value: `${avgRoas.toFixed(2)}x`,
+      subValue: 'Average across campaigns',
+      icon: MousePointer2,
+    },
+    {
+      title: 'Est. Conversions',
+      value: estimatedConversions.toLocaleString(),
+      subValue: 'Estimated from ad budget',
+      icon: Target,
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-8">
       {/* 1. Upper Summary Stats */}
       <div className="grid gap-6 md:grid-cols-3">
-        {summaryStats.map((stat) => {
+        {dynamicStats.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.title} className="border-gray-200 shadow-sm">
