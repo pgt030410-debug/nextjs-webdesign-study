@@ -11,6 +11,7 @@ export interface SummaryStat {
 
 import { getAuthUser } from '@/app/actions/auth';
 import { redirect } from 'next/navigation';
+import { formatKRW } from '@/lib/utils/currency';
 
 async function getCampaigns(orgId: number): Promise<{ data: Campaign[], error: string | null }> {
   try {
@@ -59,7 +60,7 @@ export default async function PerformancePlatformPage() {
   const dynamicStats: SummaryStat[] = [
     {
       title: 'Total Ad Spend',
-      value: `₩${totalSpend.toLocaleString()}`,
+      value: formatKRW(totalSpend),
       subValue: 'Based on active campaigns',
       iconName: 'Wallet',
     },

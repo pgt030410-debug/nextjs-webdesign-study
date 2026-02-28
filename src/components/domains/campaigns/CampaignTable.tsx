@@ -6,6 +6,7 @@ import React from 'react';
 import { Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
+import { formatKRW } from '@/lib/utils/currency';
 
 export interface Campaign {
   id: number;
@@ -79,7 +80,7 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
             >
               <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{campaign.name}</td>
               <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{campaign.advertiser}</td>
-              <td className="px-6 py-4 text-right font-mono text-gray-900 dark:text-gray-300">{campaign.budget.toLocaleString()}</td>
+              <td className="px-6 py-4 text-right font-mono text-gray-900 dark:text-gray-300">{formatKRW(campaign.budget)}</td>
               <td className="px-6 py-4 text-center font-bold text-blue-600 dark:text-blue-400">{campaign.roas}x</td>
               <td className="px-6 py-4 text-center">
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${campaign.status === 'active' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'

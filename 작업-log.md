@@ -188,3 +188,21 @@
 31. **조직 롤(Role) 및 멤버 관리 페이지 리모델링 (`/users`):**
     - **배경:** 존재하지 않았던 팀원 초대 권한 체계(RBAC) UI 구현.
     - **조치 (`UserTable.tsx`, `InviteUserModal.tsx`):** 텅 비어있던 유저 목록 페이지에 Mock 데이터를 동원한 명단 테이블(관리자, 편집자, 뷰어 배지)을 박아 넣고, `Invite User` 버튼 클릭 시 `framer-motion`과 흡사한 커스텀 Tailwind 팝업 애니메이션(`animate-in zoom-in-95`)으로 사용자 초대 이메일 발송 모달을 구현했습니다.
+
+---
+
+### 🏃 Phase 7 진행 완료 (로컬 통합 및 내보내기 / Local Integration & Exports)
+
+32. **원화(KRW) 전역 포맷팅 유틸리티 도입:**
+    - `src/lib/utils/currency.ts` 유틸리티 함수를 신설하여 `Intl.NumberFormat`을 기반으로 한 ₩ 단위 및 천 단위 콤마 포맷팅을 적용했습니다.
+    - 대시보드 위젯의 "Total Ad Spend"와 `CampaignTable.tsx`의 "Budget" 컬럼에 일관된 원화 기호 표시 연동을 완료했습니다.
+
+33. **EUC-KR(한국어 엑셀) 호환 CSV 다운로드 기능 구현:**
+    - 서버 부하를 유발하는 외부 패키지(예: xlsx) 없이 브라우저 Native `Blob` API를 활용해 CSV 내보내기 로직을 구현했습니다.
+    - 한글(캠페인 명, 매체 명 등)이 MS Excel에서 깨지지 않도록 `\uFEFF` (UTF-8 BOM) 헤더 처리를 진행하여 국내 실무자의 편의성과 다운로드 정확성을 극대화했습니다. 
+    - `CampaignList.tsx` 영역 우측 상단에 "CSV 다운로드" 액션 버튼을 신규 배치했습니다.
+
+34. **조직 알림 연동(Integration) 설정 UI 개발:**
+    - `WebhookSettings.tsx` 독립 컴포넌트를 신규 제작하고 설정(`/settings`) 페이지 하단에 배치했습니다.
+    - 내부 프레임워크 패키지 의존성 충돌(UI 컴포넌트 Import Error)을 감지하고, 즉각적으로 Tailwind 스타일링이 가미된 순수 Native HTML5 `input`, `button` 요소로 코드를 안전하게 치환하여 빌드 다운타임 및 에러를 제거했습니다.
+    - Slack Incoming Webhook 및 카카오 비즈메시지 알림톡 Host Key를 입력받고 저장하는 프론트엔드 모의 동작(Toast 애니메이션) 검증을 마쳤습니다.

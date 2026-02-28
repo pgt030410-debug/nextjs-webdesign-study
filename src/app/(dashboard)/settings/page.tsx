@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Settings as SettingsIcon } from 'lucide-react';
+import WebhookSettings from '@/components/domains/settings/WebhookSettings';
 
 export default function SettingsPage() {
     return (
@@ -50,6 +51,8 @@ export default function SettingsPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <WebhookSettings />
         </div>
     );
 }

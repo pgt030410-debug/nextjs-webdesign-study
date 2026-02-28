@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Campaign } from '../campaigns/CampaignTable';
+import { formatKRW } from '@/lib/utils/currency';
 
 interface MediaCompareData {
     advertiser: string;
@@ -108,7 +109,7 @@ const MediaCompareChart: React.FC<MediaCompareChartProps> = ({ campaigns }) => {
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
-                        tickFormatter={(value) => value.toLocaleString()}
+                        tickFormatter={(value) => formatKRW(value, false)}
                     />
                     <YAxis
                         yAxisId="right"
