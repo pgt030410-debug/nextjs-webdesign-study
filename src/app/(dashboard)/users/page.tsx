@@ -1,8 +1,14 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users as UsersIcon } from 'lucide-react';
+import { UserTable } from '@/components/domains/users/UserTable';
+import { InviteUserModal } from '@/components/domains/users/InviteUserModal';
 
 export default function UsersPage() {
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
@@ -12,12 +18,15 @@ export default function UsersPage() {
                         Manage your organization's team members and permissions here.
                     </p>
                 </div>
-                <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition-colors shrink-0">
+                <button
+                    onClick={() => setIsInviteModalOpen(true)}
+                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition-colors shrink-0"
+                >
                     Invite User
                 </button>
             </div>
 
-            <Card className="dark:bg-gray-900 border-gray-200 dark:border-white/10">
+            <Card className="dark:bg-gray-900 border-gray-200 dark:border-white/10 overflow-hidden">
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 border-b border-gray-200 dark:border-white/10 pb-6">
                     <div className="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
                         <UsersIcon className="h-6 w-6 text-blue-600 dark:text-blue-500" />
@@ -27,14 +36,19 @@ export default function UsersPage() {
                         <CardDescription className="dark:text-gray-400">View and edit all users registered within this organization.</CardDescription>
                     </div>
                 </CardHeader>
-                <CardContent className="pt-6">
-                    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-white/20 bg-gray-50 dark:bg-gray-800/50 py-16">
-                        <UsersIcon className="h-10 w-10 text-gray-400 dark:text-gray-500 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-200">No users found</h3>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by inviting a new team member.</p>
-                    </div>
+                <CardContent className="p-0">
+                    <UserTable />
                 </CardContent>
             </Card>
+
+            <InviteUserModal
+                isOpen={isInviteModalOpen}
+                onClose={() => setIsInviteModalOpen(false)}
+                onSuccess={() => {
+                    // Triggered after invite simulation completes
+                    console.log('Invite Sent successfully.');
+                }}
+            />
         </div>
     );
 }

@@ -3,7 +3,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PerformanceChart from '@/components/domains/analytics/PerformanceChart';
+import MediaCompareChart from '@/components/domains/analytics/MediaCompareChart';
 import InsightCard from '@/components/domains/insights/InsightCard';
+import { DateRangePicker, DateRange, Preset } from '@/components/ui/date-range-picker';
 import CampaignList from '@/components/domains/campaigns/CampaignList';
 import { Campaign } from '@/components/domains/campaigns/CampaignTable';
 
@@ -42,6 +44,18 @@ export default function DashboardContent({
         <div
             className={`flex flex-col gap-8 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}
         >
+            {/* 0. Top Controls: Date Filter */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Overview</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Monitor your ad campaigns and metrics</p>
+                </div>
+                <DateRangePicker onDateChange={(range, preset) => {
+                    console.log('Filtered by date:', range, preset);
+                    // In a real app we would refetch or filter campaigns array here
+                }} />
+            </div>
+
             {/* 1. Upper Summary Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {dynamicStats.map((stat) => {
@@ -85,7 +99,22 @@ export default function DashboardContent({
                 </div>
             </div>
 
-            {/* 3. Bottom Section: Campaign Table (Client Component) */}
+            {/* 3. Lower Analytics: Media Comparison (Bar Chart) */}
+            <div>
+                <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            Media Performance
+                        </CardTitle>
+                        <p className="text-sm text-gray-400 dark:text-gray-500">Budget vs ROAS by Advertiser</p>
+                    </CardHeader>
+                    <CardContent>
+                        <MediaCompareChart campaigns={campaigns} />
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* 4. Bottom Section: Campaign Table (Client Component) */}
             <div>
                 <CampaignList initialCampaigns={campaigns} error={error} />
             </div>
