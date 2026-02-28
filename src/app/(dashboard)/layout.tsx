@@ -17,7 +17,7 @@ export default function DashboardLayout({
                 <Header />
 
                 {/* Main Content Area */}
-                <main className="mt-16 min-h-[calc(100vh-4rem)] p-4 md:p-8">
+                <main className="mt-16 min-h-[calc(100vh-4rem)] p-4 md:p-8 overflow-hidden relative">
                     {children}
                 </main>
             </div>

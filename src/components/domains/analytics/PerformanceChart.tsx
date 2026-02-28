@@ -5,6 +5,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { useTheme } from 'next-themes';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Campaign } from '../campaigns/CampaignTable';
@@ -31,6 +32,21 @@ interface PerformanceChartProps {
 }
 
 const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
+  const { theme } = useTheme();
+  const [isReady, setIsReady] = React.useState(false);
+
+  // Recharts's ResponsiveContainer involves heavy DOM resize observations and SVG calculations.
+  // We explicitly delay its rendering until after Framer Motion's initial page transitions 
+  // and staggers have finished playing to prevent massive thread blocking & stutter.
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 900);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Theme-aware colors
+  const gridColor = theme === 'dark' ? '#334155' : '#f1f5f9';
+  const axisColor = theme === 'dark' ? '#64748b' : '#94a3b8';
+
   // 실제 DB에 날짜별 히스토리 레코드가 없으므로, 
   // '현재 활성화된 캠페인들의 총 예산'에 비례하여 7일간의 우상향 가상 트렌드를 동적으로 계산합니다.
   // 캠페인을 지우면 차트 전체가 내려가고, 추가하면 위로 솟구치게 되어 실시간 상호작용을 느낄 수 있습니다.
@@ -65,10 +81,16 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
     return data;
   }, [campaigns]);
 
-  if (chartData.length === 0) {
+  if (!isReady || chartData.length === 0) {
     return (
       <div className="flex h-[300px] w-full items-center justify-center text-sm text-gray-400">
-        차트를 그릴 활성 캠페인 데이터가 없습니다.
+        {!isReady ? (
+          <div className="flex animate-pulse space-x-2">
+            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-200"></div>
+            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-400"></div>
+          </div>
+        ) : "차트를 그릴 활성 캠페인 데이터가 없습니다."}
       </div>
     );
   }
@@ -84,10 +106,10 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
           data={chartData}
           margin={{ top: 5, right: 30, left: 10, bottom: 20 }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
           <XAxis
             dataKey="date"
-            stroke="#94a3b8"
+            stroke={axisColor}
             fontSize={12}
             tickLine={false}
             axisLine={false}
@@ -95,7 +117,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
           />
           <YAxis
             yAxisId="left"
-            stroke="#94a3b8"
+            stroke={axisColor}
             fontSize={12}
             tickLine={false}
             axisLine={false}
@@ -104,7 +126,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
           <YAxis
             yAxisId="right"
             orientation="right"
-            stroke="#94a3b8"
+            stroke={axisColor}
             fontSize={12}
             tickLine={false}
             axisLine={false}

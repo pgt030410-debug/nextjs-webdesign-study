@@ -44,6 +44,15 @@ This is a B2B SaaS dashboard designed for AI Marketing Performance management. I
 - **Automated Schema Synchronization:** Verified that `SQLModel.metadata.create_all` correctly initializes tables upon backend startup.
 - Provided `.env.example` and updated `.gitignore` to securely track configuration templates while protecting secrets.
 
+### Step 5: Animations & Micro-Interactions (Framer Motion)
+- **Page Transitions:** Adopted a premium, Apple-like `scale: 0.98 -> 1` and opacity fade across the `template.tsx` wrapper for all sub-routes.
+- **Performance Optimizations:** 
+    - Eliminated layout thrashing and "Flash of Unstyled Content" (FOUC) during SSR hydration by forcing an `opacity-0` to `opacity-100` delay transition mechanism based on a strict `isMounted` state.
+    - Mitigated massive Main Thread JS blocking (stutter) by replacing heavy `<motion.div staggerChildren>` structures with flat Tween-based animations.
+    - Enforced CSS GPU acceleration using `will-change: transform, opacity`.
+- **Recharts Thread Relief:** Safely insulated the heavy initial SVG resize & calculations of the `ResponsiveContainer` by delaying the chart mount by `900ms` (post-transition).
+- **Interactive States:** Handled hover/tap feedback efficiently on data table rows and actionable buttons without physics-engine overhead.
+
 ## Technical Stack
 - **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Lucide Icons.
 - **Backend:** FastAPI, Python, SQLAlchemy, SQLModel, PostgreSQL (Supabase).

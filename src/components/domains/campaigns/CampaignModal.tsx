@@ -45,24 +45,24 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/80 p-4">
+      <div className="w-full max-w-md rounded-xl bg-white dark:bg-gray-900 dark:border dark:border-white/10 p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-900">새 캠페인 추가</h3>
-          <button onClick={onClose} className="rounded-full p-1 hover:bg-gray-100 text-gray-500 transition-colors">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">새 캠페인 추가</h3>
+          <button onClick={onClose} className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
             <X size={20} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="name" className="text-sm font-medium text-gray-700">캠페인명</label>
+            <label htmlFor="name" className="text-sm font-medium text-gray-700 dark:text-gray-300">캠페인명</label>
             <input
               id="name"
               name="name"
               type="text"
               required
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
+              className="rounded-lg border border-gray-200 dark:border-white/20 bg-transparent dark:text-white px-3 py-2 text-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-colors"
               placeholder="e.g. 2024 S/S Promotion"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -70,13 +70,13 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="advertiser" className="text-sm font-medium text-gray-700">광고주</label>
+            <label htmlFor="advertiser" className="text-sm font-medium text-gray-700 dark:text-gray-300">광고주</label>
             <input
               id="advertiser"
               name="advertiser"
               type="text"
               required
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
+              className="rounded-lg border border-gray-200 dark:border-white/20 bg-transparent dark:text-white px-3 py-2 text-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-colors"
               placeholder="e.g. Samsung Electronics"
               value={formData.advertiser}
               onChange={(e) => setFormData({ ...formData, advertiser: e.target.value })}
@@ -85,27 +85,27 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="budget" className="text-sm font-medium text-gray-700">예산 (KRW)</label>
+              <label htmlFor="budget" className="text-sm font-medium text-gray-700 dark:text-gray-300">예산 (KRW)</label>
               <input
                 id="budget"
                 name="budget"
                 type="number"
                 required
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
+                className="rounded-lg border border-gray-200 dark:border-white/20 bg-transparent dark:text-white px-3 py-2 text-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-colors"
                 placeholder="0"
                 value={formData.budget}
                 onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="roas" className="text-sm font-medium text-gray-700">Target ROAS</label>
+              <label htmlFor="roas" className="text-sm font-medium text-gray-700 dark:text-gray-300">Target ROAS</label>
               <input
                 id="roas"
                 name="roas"
                 type="number"
                 step="0.1"
                 required
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none transition-colors"
+                className="rounded-lg border border-gray-200 dark:border-white/20 bg-transparent dark:text-white px-3 py-2 text-sm focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none transition-colors"
                 placeholder="0.0"
                 value={formData.roas}
                 onChange={(e) => setFormData({ ...formData, roas: e.target.value })}
@@ -117,7 +117,7 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
+              className="flex-1 rounded-lg border border-gray-200 dark:border-white/20 py-2.5 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               취소
             </button>
