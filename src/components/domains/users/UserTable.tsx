@@ -1,26 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MoreHorizontal, ShieldAlert, ShieldCheck, User as UserIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+
+import { fetchUsers } from '@/app/actions/users';
 
 export interface User {
     id: string;
     name: string;
     email: string;
-    role: 'Admin' | 'Editor' | 'Viewer';
+    role: string;
     status: 'Active' | 'Pending';
     lastActive: string;
 }
 
-const initialUsers: User[] = [
-    { id: '1', name: '김대표', email: 'ceo@company.com', role: 'Admin', status: 'Active', lastActive: '2 mins ago' },
-    { id: '2', name: '이마케터', email: 'marketer@company.com', role: 'Editor', status: 'Active', lastActive: '1 hour ago' },
-    { id: '3', name: '박인턴', email: 'intern@company.com', role: 'Viewer', status: 'Pending', lastActive: 'Never' },
-];
-
 export function UserTable() {
-    const [users, setUsers] = useState<User[]>(initialUsers);
+    const [users, setUsers] = useState<User[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadUsers = async () => {
+            const data = await fetchUsers();
+            const mappedUsers = data.map((u: any) => ({
+                id: u.id.toString(),
+                name: u.email.split('@')[0],
+                email: u.email,
+                role: u.role === 'admin' ? 'Admin' : u.role === 'editor' ? 'Editor' : 'Viewer',
+                status: 'Active',
+                lastActive: 'Recently'
+            }));
+            setUsers(mappedUsers);
+            setIsLoading(false);
+        };
+        loadUsers();
+    }, []);
 
     const getRoleBadgeColor = (role: string) => {
         switch (role) {
@@ -41,6 +55,10 @@ export function UserTable() {
             toast.success(`${name}님이 내보내졌습니다.`);
         }
     };
+
+    if (isLoading) {
+        return <div className="p-8 text-center text-gray-500">Loading users...</div>;
+    }
 
     return (
         <div className="overflow-x-auto w-full">

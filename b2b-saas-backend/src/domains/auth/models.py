@@ -4,6 +4,7 @@ from sqlmodel import SQLModel, Field
 class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
     organization_id: int
+    role: str = Field(default="viewer")
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
