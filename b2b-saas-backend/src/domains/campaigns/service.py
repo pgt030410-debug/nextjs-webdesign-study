@@ -73,3 +73,31 @@ def delete(session: Session, campaign_id: int, organization_id: int) -> bool:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete campaign: {str(e)}"
         )
+
+def optimize(session: Session, campaign_id: int, organization_id: int) -> Campaign:
+    """
+    [Phase 8] AI Budget Optimizer (Mock Logic)
+    캠페인을 조회하여 ROAS를 평가한 뒤,
+    ROAS가 300 보다 크면 예산 10% 증액
+    ROAS가 150 보다 작으면 예산 10% 삭감
+    """
+    campaign = get_by_id(session, campaign_id, organization_id)
+    
+    try:
+        # Mock Optimization Logic
+        target_roas = 200.0  # 임시 타겟 ROAS
+        if campaign.roas > target_roas * 1.5:
+            campaign.budget = campaign.budget * 1.10 # 10% 증액
+        elif campaign.roas < target_roas * 0.75:
+            campaign.budget = campaign.budget * 0.90 # 10% 삭감
+            
+        session.add(campaign)
+        session.commit()
+        session.refresh(campaign)
+        return campaign
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to optimize campaign: {str(e)}"
+        )

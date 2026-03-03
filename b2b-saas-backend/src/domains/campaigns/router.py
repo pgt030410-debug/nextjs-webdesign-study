@@ -30,3 +30,15 @@ def delete_campaign( # async 제거
     session: Session = Depends(get_session)
 ):
     return service.delete(session, campaign_id, organization_id) # await 제거
+
+@router.post("/{campaign_id}/optimize", response_model=CampaignRead)
+def optimize_campaign(
+    campaign_id: int,
+    organization_id: int,
+    session: Session = Depends(get_session)
+):
+    """
+    [Phase 8] AI Budget Optimizer (Mock)
+    현재는 LLM 대신 rule-based logic으로 ROAS에 따라 예산을 10% 증액/삭감합니다.
+    """
+    return service.optimize(session, campaign_id, organization_id)

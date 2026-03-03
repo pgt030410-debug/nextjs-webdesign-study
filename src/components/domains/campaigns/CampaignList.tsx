@@ -6,7 +6,7 @@ import CampaignTable, { Campaign } from './CampaignTable';
 import CampaignModal from './CampaignModal';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { deleteCampaign } from '@/app/actions/campaigns';
+import { deleteCampaign, optimizeCampaign } from '@/app/actions/campaigns';
 import toast from 'react-hot-toast';
 
 interface CampaignListProps {
@@ -29,6 +29,16 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
             toast.success('캠페인이 성공적으로 삭제되었습니다.');
         } catch (err) {
             toast.error(err instanceof Error ? err.message : '캠페인 삭제에 실패했습니다.');
+        }
+    };
+
+    const handleOptimizeCampaign = async (id: number) => {
+        const loadingToast = toast.loading('AI가 데이터를 분석하여 최적화 중입니다...');
+        try {
+            await optimizeCampaign(id);
+            toast.success('AI 예산 최적화가 완료되었습니다!', { id: loadingToast });
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'AI 최적화에 실패했습니다.', { id: loadingToast });
         }
     };
 
@@ -100,7 +110,7 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
                     <p>{error}</p>
                 </div>
             ) : (
-                <CampaignTable data={initialCampaigns} onDelete={handleDeleteCampaign} />
+                <CampaignTable data={initialCampaigns} onDelete={handleDeleteCampaign} onOptimize={handleOptimizeCampaign} />
             )}
 
             <CampaignModal

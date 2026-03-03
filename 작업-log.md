@@ -206,3 +206,23 @@
     - `WebhookSettings.tsx` 독립 컴포넌트를 신규 제작하고 설정(`/settings`) 페이지 하단에 배치했습니다.
     - 내부 프레임워크 패키지 의존성 충돌(UI 컴포넌트 Import Error)을 감지하고, 즉각적으로 Tailwind 스타일링이 가미된 순수 Native HTML5 `input`, `button` 요소로 코드를 안전하게 치환하여 빌드 다운타임 및 에러를 제거했습니다.
     - Slack Incoming Webhook 및 카카오 비즈메시지 알림톡 Host Key를 입력받고 저장하는 프론트엔드 모의 동작(Toast 애니메이션) 검증을 마쳤습니다.
+
+---
+
+## 📅 2026-03-03 (Phase 8 진행 완료 - AI Budget Optimizer)
+
+### 👤 사용자 요청 사항 (User Request)
+> "phase 8 개발 시작해줘."
+
+### 🤖 AI 실행 내역 (AI Actions)
+35. **백엔드 AI 분석 및 최적화 엔진 기본 설계 (Mock):**
+    - **조치 (`campaigns/router.py`, `service.py`):** `/optimize` 엔드포인트를 신규 생성하고, LLM 연동 전 임시로 캠페인의 성과(ROAS)를 룰 기반(150 미만 시 삭감, 300 초과 시 증액)으로 평가하여 예산을 10% 자동 조정 및 DB 갱신하는 비즈니스 로직 적용.
+
+36. **백엔드 마케팅 AI 챗봇(Chatbot) 엔드포인트 구현:**
+    - **조치 (`chat/router.py`, `models.py`, `main.py`):** Chat 도메인을 신설하여 사용자의 질의(Message)를 받고 키워드를 파악해(Mock) 데이터 인사이트 텍스트를 응답하는 `/chat/ask` API를 생성하고 메인 라우터에 통합.
+
+37. **프론트엔드 AI 챗봇 전역 위젯(Widget) 및 프록시 연동:**
+    - **조치 (`MarketingChatbot.tsx`, `api/chat/route.ts`, `layout.tsx`):** Shadcn UI를 활용해 대시보드 우측 하단에서 팝업으로 열리는 채팅창 위젯을 제작하고 전역 레이아웃에 주입. CORS 통신 문제를 방지하기 위한 Next.js 서버사이드 API Proxy 엔드포인트를 구성하여 통신 연결 완료.
+
+38. **프론트엔드 캠페인 AI 최적화 원클릭 액션(Action) 연동:**
+    - **조치 (`CampaignTable.tsx`, `actions/campaigns.ts`, `CampaignList.tsx`):** 기존 캠페인 테이블에 로봇 봇(Bot) 아이콘을 부착. 클릭 시 서버 액션(`optimizeCampaign`)을 호출해 즉각 예산 조정을 트리거하고 `revalidatePath('/')`로 지연 없이 최신 상태를 대시보드 화면 전체에 리렌더링하도록 구조 확립.

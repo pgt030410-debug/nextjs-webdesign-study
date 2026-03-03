@@ -57,3 +57,27 @@ export async function deleteCampaign(id: number) {
     revalidatePath('/');
     return { success: true };
 }
+
+export async function optimizeCampaign(id: number) {
+    const user = await getAuthUser();
+    if (!user) {
+        throw new Error('Unauthorized');
+    }
+
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
+
+    const response = await fetch(`${API_BASE}/${id}/optimize?organization_id=${user.organization_id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to optimize campaign: ${errorText}`);
+    }
+
+    revalidatePath('/');
+    return { success: true };
+}

@@ -1,5 +1,6 @@
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
+import { MarketingChatbot } from '@/components/chat/MarketingChatbot';
 
 export default function DashboardLayout({
     children,
@@ -21,6 +22,8 @@ export default function DashboardLayout({
                     {children}
                 </main>
             </div>
+            {/* Global Floating Chatbot for Dashboard */}
+            <MarketingChatbot />
         </div>
     );
 }

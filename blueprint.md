@@ -58,3 +58,7 @@ This is a B2B SaaS dashboard designed for AI Marketing Performance management. I
 - **Backend:** FastAPI, Python, SQLAlchemy, SQLModel, PostgreSQL (Supabase).
 - **Database Driver:** `asyncpg` for asynchronous PostgreSQL communication.
 - **Communication:** Proxy pattern for secure and unified API access.
+
+## MCP Optimizations (Model Context Protocol)
+- **Database Access:** SQLite/PostgreSQL servers integrated via Antigravity config for direct DB queries and schema validation without going through the backend.
+- **AI Agent Tooling:** Leverages native agentic capabilities for terminal execution, precise code editing, and full-browser test automation (E2E).

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Bot } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import { formatKRW } from '@/lib/utils/currency';
@@ -20,9 +20,10 @@ export interface Campaign {
 interface CampaignTableProps {
   data: Campaign[];
   onDelete?: (id: number) => void;
+  onOptimize?: (id: number) => void;
 }
 
-const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
+const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete, onOptimize }) => {
   if (data.length === 0) {
     return (
       <div className="flex min-h-[200px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 dark:border-white/20 bg-white dark:bg-gray-900 p-8">
@@ -34,6 +35,12 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
   const handleDelete = (id: number, name: string) => {
     if (confirm(`'${name}' 캠페인을 삭제하시겠습니까?`)) {
       onDelete?.(id);
+    }
+  };
+
+  const handleOptimize = (id: number, name: string) => {
+    if (confirm(`'${name}' 캠페인을 AI로 최적화(예산/상태 변경) 하시겠습니까?`)) {
+      onOptimize?.(id);
     }
   };
 
@@ -89,15 +96,28 @@ const CampaignTable: React.FC<CampaignTableProps> = ({ data, onDelete }) => {
                 </span>
               </td>
               <td className="px-6 py-4 text-right">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => handleDelete(campaign.id, campaign.name)}
-                  className="rounded-md p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
-                  aria-label="Delete campaign"
-                >
-                  <Trash2 size={16} />
-                </motion.button>
+                <div className="flex justify-end gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleOptimize(campaign.id, campaign.name)}
+                    className="rounded-md p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-900/40 dark:text-blue-400 transition-colors"
+                    aria-label="AI Optimize campaign"
+                    title="AI Optimize"
+                  >
+                    <Bot size={16} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleDelete(campaign.id, campaign.name)}
+                    className="rounded-md p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+                    aria-label="Delete campaign"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} />
+                  </motion.button>
+                </div>
               </td>
             </motion.tr>
           ))}

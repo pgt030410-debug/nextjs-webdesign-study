@@ -46,3 +46,6 @@
 
 ## 📝 4. 결론
 이 프로젝트는 **사용자 인증이 포함된 캠페인 데이터 관리용 B2B SaaS 플랫폼**의 핵심 구조를 잘 갖추고 있는 상태입니다. 프론트엔드는 현대적인 시각화 도구(Recharts)와 컴포넌트(Shadcn)를 활용해 뛰어난 대시보드 UI를 보여주고 있으며, 백엔드는 확장이 용이한 구조 분할(DDD)을 통해 유지보수가 쉽도록 설계되어 있습니다.
+
+## 🤖 5. AI Agent & MCP
+*   자세한 사항은 [🤖 Antigravity AI Agent Capabilities & Tools](docs/ai_agent_capabilities.md) 문서를 참고하세요. 해당 문서에는 현재 설정된 MCP 서버 연동(SQLite/PostgreSQL 등) 내역과 에이전트의 로컬 실행 권한이 명시되어 있습니다.
