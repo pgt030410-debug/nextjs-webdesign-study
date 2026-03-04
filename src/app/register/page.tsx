@@ -40,8 +40,12 @@ export default function RegisterPage() {
 
             // Automatically redirect to login page
             router.push('/login');
-        } catch (err: any) {
-            setError(err.message || '가입 중 오류가 발생했습니다.');
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('가입 중 오류가 발생했습니다.');
+            }
         } finally {
             setLoading(false);
         }

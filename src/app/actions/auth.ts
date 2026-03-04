@@ -17,7 +17,7 @@ function parseJwt(token: string) {
                 .join('')
         );
         return JSON.parse(jsonPayload);
-    } catch (error) {
+    } catch {
         return null;
     }
 }
@@ -50,6 +50,7 @@ export async function getAuthUser() {
     return {
         email: payload.sub,
         organization_id: payload.org_id,
+        role: payload.role || 'viewer',
     };
 }
 

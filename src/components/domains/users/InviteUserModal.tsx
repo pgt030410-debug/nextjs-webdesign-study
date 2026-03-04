@@ -80,7 +80,7 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                             <select
                                 id="role"
                                 value={role}
-                                onChange={(e) => setRole(e.target.value as any)}
+                                onChange={(e) => setRole(e.target.value as "Admin" | "Editor" | "Viewer")}
                                 className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="Admin">Admin (최고 관리자)</option>
@@ -100,7 +100,8 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+                                className="px-4 py-2 text-sm font-medium text-white rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+                                style={{ backgroundColor: 'var(--color-primary-brand, #3b82f6)' }}
                             >
                                 {isSubmitting ? (
                                     <>

@@ -1,6 +1,9 @@
 from typing import List, Optional, Sequence
-from sqlmodel import select, Session # AsyncSession 대신 동기식 Session 임포트
+from sqlmodel import select, Session
+from sqlalchemy import func
 from .models import Campaign, CampaignCreate
+from ..auth.models import User
+from ..audit.models import AuditLog
 from fastapi import HTTPException, status
 
 #
@@ -41,15 +44,45 @@ def get_by_id(session: Session, campaign_id: int, organization_id: int) -> Campa
     return campaign
 
 def create(session: Session, obj_in: CampaignCreate, organization_id: int) -> Campaign:
-    """새로운 캠페인 생성 (트랜잭션 관리)"""
+    """새로운 캠페인 생성 (트랜잭션 관리 및 구독 한도 체크)"""
     try:
+        # 1. 구독 플랜 체크
+        user_stmt = select(User).where(User.organization_id == organization_id)
+        user = session.execute(user_stmt).scalars().first()
+        tier = user.subscription_tier if user else "starter"
+        
+        if tier == "starter":
+            # 캠페인 개수 체크
+            count_stmt = select(func.count(Campaign.id)).where(Campaign.organization_id == organization_id)
+            count = session.execute(count_stmt).scalar()
+            if count and count >= 3:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Starter 플랜은 최대 3개의 캠페인만 생성할 수 있습니다. 결제 플랜을 업그레이드 해주세요."
+                )
+
         db_obj = Campaign.model_validate(obj_in)
         db_obj.organization_id = organization_id  # 매개변수로 받은 ID 강제 적용
         
         session.add(db_obj)
-        session.commit() # await 제거
-        session.refresh(db_obj) # await 제거
+        session.commit() # 먼저 생성되어야 ID를 얻습니다.
+        session.refresh(db_obj) 
+        
+        # 감사 로그 작성 (성공 시)
+        # Auth 연동 전이므로 user_id는 임시로 1 할당
+        audit_log = AuditLog(
+            organization_id=organization_id,
+            user_id=1, 
+            action="CREATE",
+            resource=f"Campaign: {db_obj.name}"
+        )
+        session.add(audit_log)
+        session.commit()
+
         return db_obj
+    except HTTPException as he:
+        # HTTP 에러는 그대로 넘김
+        raise he
     except Exception as e:
         session.rollback() # await 제거
         print(f"Error in campaign create: {str(e)}")
@@ -64,7 +97,18 @@ def delete(session: Session, campaign_id: int, organization_id: int) -> bool:
     campaign = get_by_id(session, campaign_id, organization_id)
     
     try:
+        campaign_name = campaign.name
         session.delete(campaign) # await 제거
+
+        # 감사 로그 작성
+        audit_log = AuditLog(
+            organization_id=organization_id,
+            user_id=1,
+            action="DELETE",
+            resource=f"Campaign: {campaign_name}"
+        )
+        session.add(audit_log)
+
         session.commit() # await 제거
         return True
     except Exception as e:
@@ -101,3 +145,55 @@ def optimize(session: Session, campaign_id: int, organization_id: int) -> Campai
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to optimize campaign: {str(e)}"
         )
+
+def update_status(session: Session, campaign_id: int, organization_id: int, new_status: str) -> Campaign:
+    """캠페인의 상태를 변경 (Approval Workflow)"""
+    campaign = get_by_id(session, campaign_id, organization_id)
+    try:
+        from .models import CampaignStatus
+        campaign.status = CampaignStatus(new_status)
+        session.add(campaign)
+        
+        # Add Audit log
+        audit_log = AuditLog(
+            organization_id=organization_id,
+            user_id=1,
+            action="UPDATE_STATUS",
+            resource=f"Campaign: {campaign.name} -> {new_status}"
+        )
+        session.add(audit_log)
+        
+        session.commit()
+        session.refresh(campaign)
+        return campaign
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid status value")
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+from .models import CampaignComment, CampaignCommentCreate
+def add_comment(session: Session, campaign_id: int, user_email: str, comment_in: CampaignCommentCreate) -> CampaignComment:
+    """캠페인 코멘트 추가"""
+    try:
+        new_comment = CampaignComment(
+            campaign_id=campaign_id,
+            user_email=user_email,
+            content=comment_in.content
+        )
+        session.add(new_comment)
+        session.commit()
+        session.refresh(new_comment)
+        return new_comment
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+def get_comments(session: Session, campaign_id: int) -> Sequence[CampaignComment]:
+    """캠페인 코멘트 목록 조회"""
+    try:
+        statement = select(CampaignComment).where(CampaignComment.campaign_id == campaign_id).order_by(CampaignComment.created_at.asc())
+        results = session.execute(statement)
+        return results.scalars().all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getAuthUser } from '@/app/actions/auth'
 
 //
 // [Phase 8] Chat API Proxy
@@ -9,8 +10,14 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:10000'
 
 export async function POST(request: Request) {
     try {
+        const user = await getAuthUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const body = await request.json()
-        const { message, organization_id = 12 } = body
+        const { message, history = [] } = body
+        const organization_id = user.organization_id;
 
         const response = await fetch(`${BACKEND_URL}/chat/ask`, {
             method: 'POST',
@@ -20,6 +27,7 @@ export async function POST(request: Request) {
             body: JSON.stringify({
                 message,
                 organization_id,
+                history,
             }),
         })
 

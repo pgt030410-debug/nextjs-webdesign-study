@@ -7,6 +7,7 @@ from .domains.auth.router import router as auth_router
 from .domains.users.router import router as users_router
 from .domains.settings.router import router as settings_router
 from .domains.chat.router import router as chat_router
+from .domains.audit.router import router as audit_router
 
 # Main Entry Point: 안정적인 동기식(Sync) DB 연결로 원복
 
@@ -38,6 +39,7 @@ app.include_router(campaigns_router)
 app.include_router(users_router)
 app.include_router(settings_router)
 app.include_router(chat_router)
+app.include_router(audit_router)
 
 # 수정됨: 단순 상태 체크 API이므로 굳이 async를 쓸 필요가 없습니다.
 @app.get("/")

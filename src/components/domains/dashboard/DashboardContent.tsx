@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PerformanceChart from '@/components/domains/analytics/PerformanceChart';
 import MediaCompareChart from '@/components/domains/analytics/MediaCompareChart';
 import InsightCard from '@/components/domains/insights/InsightCard';
-import { DateRangePicker, DateRange, Preset } from '@/components/ui/date-range-picker';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import CampaignList from '@/components/domains/campaigns/CampaignList';
 import { Campaign } from '@/components/domains/campaigns/CampaignTable';
 
@@ -67,11 +67,11 @@ export default function DashboardContent({
                                     <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-tight">
                                         {stat.title}
                                     </CardTitle>
-                                    <Icon size={18} className="text-blue-600" />
+                                    <Icon size={18} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
-                                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">{stat.subValue}</p>
+                                    <p className="text-xs font-medium mt-1" style={{ color: 'var(--color-primary-brand, #3b82f6)' }}>{stat.subValue}</p>
                                 </CardContent>
                             </Card>
                         </div>

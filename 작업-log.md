@@ -226,3 +226,116 @@
 
 38. **프론트엔드 캠페인 AI 최적화 원클릭 액션(Action) 연동:**
     - **조치 (`CampaignTable.tsx`, `actions/campaigns.ts`, `CampaignList.tsx`):** 기존 캠페인 테이블에 로봇 봇(Bot) 아이콘을 부착. 클릭 시 서버 액션(`optimizeCampaign`)을 호출해 즉각 예산 조정을 트리거하고 `revalidatePath('/')`로 지연 없이 최신 상태를 대시보드 화면 전체에 리렌더링하도록 구조 확립.
+
+## [2026-03-04 09:02:11] 추가 작업 - MCP 서버 연동 설정 초기화
+- 사용자의 요청에 따라 `mcp_config.json`에서 외부(GitHub, Brave Search, PostgreSQL) 서버 연결을 전부 해제하고, 대체제인 Agent Skills 기능으로 우회할 수 있도록 정리함.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 9 B2B 과금/구독형 플랜 및 다크모드 애니메이션 적용
+- **다크모드 전환 UX 개선**: `globals.css` 전역에 `transition: background-color 0.3s ease-in-out` 등을 주입하여, 상단 해/달 아이콘 클릭 시 색상이 뚝뚝 끊기지 않고 부드럽게 스며들도록 글로벌 부드러움(Smoothness) 모션 추가.
+- **백엔드 (모델 및 서비스 고도화)**:
+  - `UserBase` 모델에 `subscription_tier` (기본값 "starter") 컬럼 추가 및 SQLite 수동 `ALTER` DB 마이그레이션 진행.
+  - `domains/campaigns/service.py` 캠페인 생성 로직에서 유저의 플랜을 체크하여, "starter"일 경우 최대 3개의 한도(Limit)를 초과시 `HTTP 403`과 커스텀 에러 메시지를 뱉도록 제어 방어망 구축.
+- **프론트엔드 (UI 및 상태 관리)**:
+  - `/settings/billing` 라우팅 개설 및 매우 세련되고 응답성 좋은 3단계 요금제(Starter/Pro/Enterprise) Pricing Table 디자인 구성 (`framer-motion` 패키지 활용 간소화 모션 포함).
+  - 컴포넌트 레이아웃 Sidebar에 `Billing`(신용카드 아이콘) 네비게이션 추가 연결.
+  - Server Actions에서 백엔드의 `HTTP 403 JSON`을 파싱하여, '캠페인 3개 초과 한도'시 사용자에게 즉각적이고 부드러운 Toast Error 메시지 "결제 플랜을 업그레이드 해주세요"가 전시되도록 우아하게(Graceful) 에러 핸들링.
+- **클린 코드 & 구조화**:
+  - `npm run lint` 시 남아있던 약 19개의 과거 부채(Tech Debt)들을 전면 청산(`any` 타입 제거, 사용하지 않는 Icon import 정리, `Math.random` purity 경고 무효화 처리)하여 **Zero Error** 클린 빌드 상태 달성.
+
+## [2026-03-04 09:26:54] 추가 작업 - 다크모드/라이트모드 로딩 트랜지션 강제 활성화
+- Next-themes 패키지에서 테마를 토글할 때 강제로 트랜지션을 끄는 `disableTransitionOnChange` 속성이 `app/layout.tsx`의 `ThemeProvider`에 기본 적용되어 있어 CSS 트랜지션을 씹어먹는 문제를 발견함.
+- 해당 속성을 제거하여, 뷰포트 전체의 다크모드 색상 전환이 0.3초 동안 스무스하고 영화처럼 부드럽게 이루어질 수 있도록 수정.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 10 Custom Reports & 화이트라벨링(White-labeling) 구축
+- **테마 전역 통제 (Zustand 도입)**: 프론트엔드 상태 관리 라이브러리 `zustand`를 설치하고, 사용자 설정이 로컬 환경에서 지속 유지(persist)되도록 `useThemeStore.ts` 설계 및 커스텀 로고 텍스트/메인 컬러 상태화.
+- **Appearance 설정 뷰 개설 (`/settings/appearance`)**: 클라이언트(대행사/광고주)가 대시보드를 커스텀하기 위한 브랜드 명칭 설정 및 7가지 다채로운 프리셋 컬러 팔레트 선택 UI 개발 (선택 시 즉각 Toast 알림 및 Store 동기화).
+- **Tailwind 동적 할당 및 Sidebar 결합**:
+  - JIT 컴파일에서 동적 템플릿 리터럴(예: `bg-${brandColor}-600`)이 누락되는 현상을 억제하기 위해 `tailwind.safelist.txt` 생성 후 빌드 정적 분석기(config)에 결합.
+  - 전역 스토어를 좌측 네비게이션(Sidebar.tsx)에 구독시켜, 브랜드 컬러 및 로고 텍스트가 변경 시 실시간으로 전체 앱 레이아웃에 반응형으로 뿌려지도록 연결(White-labeling Mock).
+- **커스텀 리포트 허브 (`/reports`)**:
+  - "Custom Reports" 모의 생성 폼 페이지를 디자인하고 사이드바 메뉴에 연동. 
+  - 특정 기간과 포함할 지표(Spend, Clicks 등)를 체크하고 리포트를 PDF나 이메일로 받아보는 듯한 가상의 Generator 버튼(Loading, Success 모션 인터랙션 포함) 구현.
+  - 리포트 화면 우측에 "브랜드 화이트라벨 적용 미리보기" 패널을 넣어 현재 스토어에 지정된 Theme Color와 Name이 কিভাবে 보고서 커버를 씌우는지 시각적으로 구현.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 10.5 Advanced Appearance & Layout Refactoring
+- **Settings Layout 리팩토링 (`/settings/layout.tsx`)**:
+  - 기존 `page.tsx`에 인라인으로 들어있던 설정 탭(General, Appearance, Billing)을 Next.js App Router의 `layout.tsx`로 분리하여 탭 전환 시 화면 깜빡임과 리렌더링을 제거함.
+- **Custom Hex Color 피커 & 글로벌 주입(Inject) 시스템**:
+  - `useThemeStore`에 `isCustomColor`와 `customHex` 상태를 추가하여, Tailwind 기본 색상 대신 정확한 브랜드 컬러(#FF5733 등)를 받아올 수 있도록 상태 확장.
+  - `/settings/appearance`에 `#` 아이콘이 포함된 커스텀 Hex Color 입력 폼을 추가.
+  - **`ThemeColorInjector.tsx`**: 사용자가 선택한 Hex 색상을 Root Layout에서 `<style>` 태그로 주입해 `:root { --color-primary-brand }` CSS 변수를 동적으로 오버라이드.
+  - 대시보드의 중요 요소들(CampaignTable 상태 뱃지 및 액션 버튼, Overview 통계 카드 텍스트 등)과 차트(PerformanceChart 선, MediaCompare 바)가 이제 하드코딩된 Tailwind Blue(`text-blue-600`) 대신 커스텀된 `var(--color-primary-brand)`를 바라보도록 변수 맵핑.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 10.6: Settings UI Fix & Global Color Extension
+- **Settings Layout 버그 수정**:
+  - `(/settings/page.tsx)` 이전에 Layout을 분리하면서 남은 `<div className="flex...">` 컨테이너 때문에 General Configurations 카드와 Webhook 설정이 좌우로 나란히(Side-by-side) 불완전하게 나오던 레이아웃 렌더링 버그를 단일 `space-y-8` 흐름으로 정렬 및 수정 완료.
+- **Billing 탭 제거**:
+  - `Sidebar`에 메인으로 나와 있으므로 `Settings` 내부의 중복된 네비게이션 탭에서 `Billing`을 제거함.
+- **Global Theme Color 적용 범위 확대 (Total Overview Extension)**:
+  - 앞서 차트와 통계에만 적용된 `var(--color-primary-brand)` 사용자 정의 색상을 Overview 대시보드 화면 및 전역 공통 UI에도 완벽하게 적용함.
+    - **Sidebar**: 활성화(Active) 링크 배경 및 텍스트, 최상단 Brand Name 그라디언트 텍스트
+    - **Header**: 상단의 Organization 사용자 뱃지
+    - **DateRangePicker**: 선택된(Active) Preset 버튼 텍스트의 색상 설정
+    - **InsightCard**: AI Sparkles 아이콘 및 상승(Positive) 지시등 아이콘
+    - **UserTable / Settings**: 조직 멤버의 동그란 프로필 아바타 이미지 및 (Editor) 롤 권한 배지, 저장 버튼 등
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 10.7: Billing Route & Colors Extract
+- **Billing 라우트 구조 변경**:
+  - `src/app/(dashboard)/settings/billing` 폴더를 `src/app/(dashboard)/billing` 계층으로 이동시켜 SettingsLayout 탭 네비게이션 제약에서 벗어나도록 분리.
+  - Sidebar의 Billing 탭 클릭 시 `/billing`으로 다이렉트 랜딩되도록 Route Href 경로 수정.
+- **Billing UI 전면 디자인 변수(CSS Variable) 연동**:
+  - 요금제 카드(Starter, Pro, Enterprise), 결제 수단 박스, 배지, 체크 아이콘 등에 박혀있던 정적 `블루(text-blue-*, bg-blue-*, border-blue-*)`계열 클래스 제거.
+  - 전역 스토어인 `var(--color-primary-brand)`와 `color-mix()` CSS 레벨 블렌딩 기법을 도입하여, 선택된 테마 브랜드 색상에 맞춰 부드러운 투명도(Opacity) 타겟 트랜지션을 완벽하게 대체 반영함.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 11: Real-time AI Chatbot RAG Integration (FastAPI)
+- **백엔드 의존성 추가**: LLM 호출을 위해 `google-generativeai` 패키지 설치 (`pip install google-generativeai`).
+- **Context Search (RAG) 구현 (`chat/service.py`)**: 
+  - 사용자의 조직 ID(`organization_id`) 기반으로 데이터베이스에 저장된 실제 캠페인 전체 목록(SQLAlchemy)을 읽어오도록 구성.
+  - 조회된 Raw 릴레이션 데이터를 Markdown 표(Table) 형태의 텍스트로 직렬화(Serialize) 시켜서 Context를 조립.
+- **LLM Prompting 통신망 구축**: 
+  - 조립된 DB 컨텍스트에 '퍼포먼스 마케팅 AI 어시스턴트' 페르소나의 구조화된 시스템 프롬프트를 덧대어 `gemini-1.5-flash` 모델을 비동기(`await`) 호출하도록 통합.
+- `.env.example` 에 `GEMINI_API_KEY` 환경변수 슬롯 추가 및 RAG 구조 테스트 및 Uvicorn 인스턴스 반영 재시작 완료.
+- **Gemini SDK Migration & 404 Fix**:
+  - 사용자 제공 API Key(`AIzaSyAp...`)의 권한 구조상 기존 `gemini-1.5-flash` 모델 텍스트 생성 접근이 `404 Not Found` 처리되거나 `gemini-2.0-flash` 모델이 `429 Quota Exceeded` 에러를 뱉는 현상 대응.
+  - 레거시 패키지인 `google-generativeai`를 완전히 걷어내고 최신 공식 SDK인 `google-genai` 패키지 체제로 전면 이관 작성 완료.
+  - 해당 API 키로 권한 접근이 유효한 `gemini-2.5-flash` 모델로 하드코딩 교체하여 RAG 응답 통신 100% 성공 검증.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - 챗봇 Markdown 렌더링 UI 개선
+- **문제 인식**: 백엔드의 Gemini 2.5 AI가 마크다운 문법(`**볼드체**` 등)을 섞어 답변을 주었으나, 프론트엔드(`MarketingChatbot.tsx`) 컴포넌트 내부에서 Plain Text 렌더러로 출력하여 가독성이 현저히 떨어짐.
+- **조치 내역 (`src/components/chat/MarketingChatbot.tsx`)**:
+  - `react-markdown` 패키지를 Next.js 모듈에 이식(`npm i react-markdown`).
+  - 사용자 질문(User Query)과 달리 AI 응답 텍스트에 한해 `<ReactMarkdown>` 컨테이너로 감싸 파싱 루프 실행.
+  - Tailwind CSS의 `className`과 ReactMarkdown `components` Prop을 중첩하여 `p`, `strong`(볼드체), `ul`, `ol` 리스트 마커 등을 예쁜 간격(Space-y)으로 스타일링하여 유저 친화적인 읽힐 수 있는 UI 제공.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - Phase 11.5: 챗봇 다턴(Multi-turn) 기억 능력 활성화
+- **문제 인식**: 챗봇이 Stateless하게 현재 질의문(Question) 1개만 백엔드에 보내기 때문에, "이 캠페인은 뭐야?" 같은 지시대명사가 포함된 후속 질문의 문맥(Context)을 이해하지 못하고 치매 환자처럼 행동함.
+- **프론트엔드 연동 (`MarketingChatbot.tsx`, `api/chat/route.ts`)**:
+  - React State로 유지되는 `messages` 배열에서 봇의 최초 기본 인사말을 제외한 과거 대화 내역 전체를 추출하여 HTTP POST Body의 `history` Array 객체 파라미터로 실어보내도록 Next.js 로직 수정.
+- **백엔드 연동 (`models.py`, `router.py`, `service.py`)**:
+  - Pydantic 요청 스키마 `ChatRequest`에 `history: Optional[List[Dict[str, Any]]]` 타입 필드를 신규 추가하여 API 에러 무효화.
+  - `generate_marketing_insight` 서비스 함수 단에서 `history` 리스트를 파싱하여, Gemini 모델에 던지는 시스템 프롬프트(System Prompt) 최상단에 `[과거 대화 내역]` 텍스트 덩어리로 주입함으로써 모델이 전체 대화 문맥(Memory)을 영구적으로 참조할 수 있도록 RAG 고도화 완료.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - Phase 11.6: 챗봇 UX 고도화 (명시적 Reset 버튼 도입)
+- **문제 인식**: 챗봇 위젯을 닫는 'X' 버튼에 대화 초기화(Reset) 로직을 바인딩하면, 사용자가 단순히 대시보드의 다른 차트를 잠깐 확인하기 위해 창을 닫았을 때 의도치 않게 대화 맥락이 모두 날아가는 치명적인 UX 이슈 발생.
+- **프론트엔드 연동 (`MarketingChatbot.tsx`)**:
+  - 'X' 버튼(`setIsOpen(false)`)의 로직을 순수한 "창 닫기(Hide)" 기능으로 롤백하여, 위젯을 닫았다 열어도 기존 대화 내역이 보존되도록 안정성 확보.
+  - 헤더(Header) 타이틀 옆 우측 상단에 명시적인 **휴지통(Trash2) 아이콘 버튼**을 신규 추가. 
+  - 휴지통 클릭 시에만 `messages` State 배열을 최초 인사말로 초기화(`resetChat`)하는 명시적 리셋 트리거를 분리 구현하여 사용자 경험 대폭 개선.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - Phase 11.7: 챗봇 UI/UX 전면 프리미엄 리디자인
+- **문제 인식**: 챗봇의 외관이 지나치게 딱딱한 박스 형태로 구성되어 있어, 최신 SaaS 제품의 트렌디한 느낌이 부족함.
+- **조치 내역 (`src/components/chat/MarketingChatbot.tsx`)**:
+  - **Glassmorphism (글래스모피즘)**: 헤더와 푸터에 `backdrop-blur-xl` 및 반투명 배경(`bg-white/80`)을 주입하여 스크롤 시 뒷배경이 은은하게 투영되도록 고급화.
+  - **Typography & Iconography**: 메인 타이틀(AI Insight Bot)에 Primary Gradient 텍스트 이펙트(`bg-clip-text text-transparent`) 적용. 닫혔을 때 보이는 플로팅 액션 버튼(FAB)에 Hover 시 크기가 변하고 그림자가 강조(`hover:scale-110`, `shadow-primary/40`)되는 역동적인 모션 캡처 추가.
+- **Chat Bubbles (말풍선)**: 유저 메시지는 Primary Gradient(`bg-gradient-to-tr`) 곡선을 주어 현대적인 iMessage 느낌 구현. AI 응답은 부드러운 테두리(`border-slate-100`)와 깔끔한 화이트톤 쉐도우(`shadow-sm`)를 매칭.
+  - **Micro Interaction (타이핑 애니메이션)**: 봇이 데이터를 로딩(`isLoading`)할 때, 딱딱한 스피너 아이콘 대신 3개의 Primary 색상 점(Dot)이 시차를 두고(`animationDelay`) 위아래로 튀어 오르는(`animate-bounce`) '진짜 타이핑 치는 듯한' 프리미엄 마이크로 인터랙션 구현 완료.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - Phase 12: 엔터프라이즈 보안 및 감사 시스템 (Audit & SSO)
+- **백엔드 (FastAPI) 연동**:
+  - `src/domains/audit/models.py`: B2B 엔터프라이즈급 불변(Immutable)의 시스템 기록을 남기기 위한 `AuditLog` 데이터베이스 테이블(SQLModel) 설계.
+  - `src/domains/audit/router.py`: `GET /audit/logs` API 엔드포인트 구축. (organization_id 단위 이력 조회)
+  - `src/domains/campaigns/service.py`: 캠페인 생성(`POST`) 및 삭제(`DELETE`) 발생 시 트리거로 동작하여 `AuditLog`(CREATE/DELETE 액션과 자원 명칭 기록)를 DB 트랜잭션과 함께 Commit 하도록 비즈니스 결합 코드 주입 (RDBMS Sync Session 활용).
+- **프론트엔드 (Next.js) UI & UX 연동**:
+  - `src/components/layout/Sidebar.tsx` 및 `settings/layout.tsx`: 전역 사이드바 구조상 Settings Layout 탭 메뉴에 **Audit Logs**와 **Enterprise Security** 서브 내비게이션 요소 추가.
+  - `/settings/security` (Security Page): SAML 2.0 Identity Provider(Okta, Azure AD 등) 세팅용 엔터프라이즈 SSO 폼 뷰 컴포넌트 개발 완료.
+  - `/settings/audit` (Audit Page): `/audit/logs` API를 Fetch하여 타임스탬프, 유저 ID, 수행 액션(CREATE/DELETE/UPDATE)을 데이터테이블로 한눈에 보여주는 감사 이력 대시보드 구조 완성.

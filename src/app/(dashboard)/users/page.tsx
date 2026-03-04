@@ -14,13 +14,12 @@ export default function UsersPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Users</h1>
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        Manage your organization's team members and permissions here.
-                    </p>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">View and manage your team members and their roles.</p>
                 </div>
                 <button
                     onClick={() => setIsInviteModalOpen(true)}
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 transition-colors shrink-0"
+                    className="rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity shrink-0"
+                    style={{ backgroundColor: 'var(--color-primary-brand, #3b82f6)' }}
                 >
                     Invite User
                 </button>
@@ -28,8 +27,11 @@ export default function UsersPage() {
 
             <Card className="dark:bg-gray-900 border-gray-200 dark:border-white/10 overflow-hidden">
                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 border-b border-gray-200 dark:border-white/10 pb-6">
-                    <div className="rounded-full bg-blue-100 dark:bg-blue-900/30 p-3">
-                        <UsersIcon className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+                    <div
+                        className="rounded-full p-3 flex items-center justify-center"
+                        style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' }}
+                    >
+                        <UsersIcon className="h-6 w-6" />
                     </div>
                     <div>
                         <CardTitle className="dark:text-white">Team Directory</CardTitle>

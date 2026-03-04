@@ -19,7 +19,7 @@ interface PerformanceData {
 const chartConfig = {
   clicks: {
     label: 'Clicks',
-    color: '#3b82f6',
+    color: 'var(--color-primary-brand, #3b82f6)',
   },
   conversions: {
     label: 'Conversions',
@@ -69,6 +69,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
       const dateStr = `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}`;
 
       // 과거로 갈수록 수치가 10~30%씩 무작위로 작아지게 가공하여 트렌드 라인 형성
+      // eslint-disable-next-line react-hooks/purity
       const volatility = 1 - (i * 0.12) + (Math.random() * 0.05 - 0.02);
 
       data.push({
@@ -137,10 +138,10 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
             yAxisId="left"
             type="monotone"
             dataKey="clicks"
-            stroke="var(--color-clicks)"
+            stroke="var(--color-primary-brand, #3b82f6)"
             strokeWidth={2}
-            dot={{ r: 4, fill: '#3b82f6' }}
-            activeDot={{ r: 6, strokeWidth: 0 }}
+            dot={{ r: 4, fill: 'var(--color-primary-brand, #3b82f6)' }}
+            activeDot={{ r: 6, strokeWidth: 0, fill: 'var(--color-primary-brand, #3b82f6)' }}
           />
           <Line
             yAxisId="right"

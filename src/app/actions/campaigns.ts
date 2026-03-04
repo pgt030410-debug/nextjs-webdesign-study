@@ -1,13 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getAuthUser } from './auth';
+import { getAuthUser, getAuthToken } from './auth';
 
 const BACKEND_URL = 'https://nextjs-webdesign-study.onrender.com/campaigns/';
 
 export async function createCampaign(formData: FormData) {
     const user = await getAuthUser();
-    if (!user) {
+    const token = await getAuthToken();
+    if (!user || !token) {
         throw new Error('Unauthorized');
     }
 
@@ -24,13 +25,21 @@ export async function createCampaign(formData: FormData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to create campaign: ${errorText}`);
+        let errorMessage = `Failed to create campaign: ${response.statusText}`;
+        try {
+            const errorData = await response.json();
+            if (errorData.detail) errorMessage = errorData.detail;
+        } catch {
+            const errorText = await response.text();
+            if (errorText) errorMessage = errorText;
+        }
+        throw new Error(errorMessage);
     }
 
     // Next.js 캐시 무효화 -> 즉시 서버 컴포넌트 데이터 리페치
@@ -40,12 +49,16 @@ export async function createCampaign(formData: FormData) {
 
 export async function deleteCampaign(id: number) {
     const user = await getAuthUser();
-    if (!user) {
+    const token = await getAuthToken();
+    if (!user || !token) {
         throw new Error('Unauthorized');
     }
 
     const response = await fetch(`${BACKEND_URL}${id}?organization_id=${user.organization_id}`, {
         method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
     });
 
     if (!response.ok) {
@@ -60,7 +73,8 @@ export async function deleteCampaign(id: number) {
 
 export async function optimizeCampaign(id: number) {
     const user = await getAuthUser();
-    if (!user) {
+    const token = await getAuthToken();
+    if (!user || !token) {
         throw new Error('Unauthorized');
     }
 
@@ -70,6 +84,7 @@ export async function optimizeCampaign(id: number) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         }
     });
 
@@ -80,4 +95,82 @@ export async function optimizeCampaign(id: number) {
 
     revalidatePath('/');
     return { success: true };
+}
+
+export async function updateCampaignStatus(id: number, status: string) {
+    const user = await getAuthUser();
+    const token = await getAuthToken();
+    if (!user || !token) throw new Error('Unauthorized');
+
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
+
+    const response = await fetch(`${API_BASE}/${id}/status?organization_id=${user.organization_id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status })
+    });
+
+    if (!response.ok) {
+        let errorMessage = `Failed to update status: ${response.statusText}`;
+        try {
+            const errorData = await response.json();
+            if (errorData.detail) errorMessage = errorData.detail;
+        } catch {
+            const errorText = await response.text();
+            if (errorText) errorMessage = errorText;
+        }
+        throw new Error(errorMessage);
+    }
+
+    revalidatePath('/');
+    return { success: true };
+}
+
+export async function getCampaignComments(id: number) {
+    const user = await getAuthUser();
+    const token = await getAuthToken();
+    if (!user || !token) return [];
+
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
+
+    const response = await fetch(`${API_BASE}/${id}/comments`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    });
+
+    if (!response.ok) {
+        console.error("Failed to fetch comments");
+        return [];
+    }
+
+    return response.json();
+}
+
+export async function createCampaignComment(id: number, content: string) {
+    const user = await getAuthUser();
+    const token = await getAuthToken();
+    if (!user || !token) throw new Error('Unauthorized');
+
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
+
+    const response = await fetch(`${API_BASE}/${id}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content })
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to post comment");
+    }
+
+    revalidatePath('/');
+    return response.json();
 }

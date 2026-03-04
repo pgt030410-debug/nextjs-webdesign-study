@@ -22,6 +22,8 @@ async def signup(user_in: UserCreate, session: Session = Depends(get_session)):
     db_user = User(
         email=user_in.email, 
         organization_id=user_in.organization_id, 
+        role=user_in.role,
+        subscription_tier=user_in.subscription_tier,
         hashed_password=hashed_password
     )
     session.add(db_user)
@@ -42,6 +44,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Sessi
     
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = service.create_access_token(
-        data={"sub": user.email, "org_id": user.organization_id}, expires_delta=access_token_expires
+        data={"sub": user.email, "org_id": user.organization_id, "role": user.role}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}

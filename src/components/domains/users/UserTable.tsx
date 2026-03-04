@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MoreHorizontal, ShieldAlert, ShieldCheck, User as UserIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { fetchUsers } from '@/app/actions/users';
@@ -22,7 +21,7 @@ export function UserTable() {
     useEffect(() => {
         const loadUsers = async () => {
             const data = await fetchUsers();
-            const mappedUsers = data.map((u: any) => ({
+            const mappedUsers = data.map((u: { id: number, email: string, role: string, organization_id: number, subscription_tier?: string }) => ({
                 id: u.id.toString(),
                 name: u.email.split('@')[0],
                 email: u.email,
@@ -39,7 +38,7 @@ export function UserTable() {
     const getRoleBadgeColor = (role: string) => {
         switch (role) {
             case 'Admin': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
-            case 'Editor': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+            case 'Editor': return '';
             case 'Viewer': return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400';
             default: return 'bg-gray-100 text-gray-700';
         }
@@ -77,7 +76,10 @@ export function UserTable() {
                         <tr key={user.id} className="hover:bg-gray-50/30 dark:hover:bg-gray-800/30 transition-colors">
                             <td className="px-4 py-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">
+                                    <div
+                                        className="h-8 w-8 rounded-full flex items-center justify-center font-bold"
+                                        style={{ backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' }}
+                                    >
                                         {user.name.charAt(0)}
                                     </div>
                                     <div>
@@ -87,7 +89,10 @@ export function UserTable() {
                                 </div>
                             </td>
                             <td className="px-4 py-3">
-                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
+                                <span
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}
+                                    style={user.role === 'Editor' ? { backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' } : {}}
+                                >
                                     {user.role}
                                 </span>
                             </td>

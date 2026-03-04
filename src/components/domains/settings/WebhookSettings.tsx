@@ -1,34 +1,50 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquare, BellRing, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { getWebhookSettings, saveWebhookSettings } from '@/app/actions/settings';
 
 export default function WebhookSettings() {
     const [slackUrl, setSlackUrl] = useState('');
     const [kakaoKey, setKakaoKey] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const handleSave = () => {
-        setIsSaving(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSaving(false);
-            if (!slackUrl && !kakaoKey) {
-                toast.error('저장할 웹훅 URL이나 호스트 키를 입력해주세요.');
-                return;
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const settings = await getWebhookSettings();
+                setSlackUrl(settings.slack_webhook_url || '');
+                setKakaoKey(settings.kakao_host_key || '');
+            } catch (error) {
+                console.error('Failed to load webhook settings', error);
+            } finally {
+                setIsLoading(false);
             }
+        };
+        fetchSettings();
+    }, []);
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            await saveWebhookSettings(slackUrl, kakaoKey);
             toast.success('알림 연동 설정이 저장되었습니다.');
-        }, 800);
+        } catch (error: any) {
+            toast.error(error.message || '설정 저장에 실패했습니다.');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
         <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900 mt-6">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <BellRing size={20} className="text-blue-600" />
+                    <BellRing size={20} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
                     Integration (알림 연동)
                 </CardTitle>
                 <CardDescription>

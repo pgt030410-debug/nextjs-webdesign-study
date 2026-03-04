@@ -35,7 +35,7 @@ const InsightCard: React.FC = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2 mb-2">
-        <Sparkles size={18} className="text-blue-600 dark:text-blue-500" />
+        <Sparkles size={18} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
         <h3 className="font-bold text-gray-900 dark:text-white">AI Performance Insights</h3>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
@@ -46,7 +46,7 @@ const InsightCard: React.FC = () => {
                 <CardTitle className="text-sm font-semibold flex items-center justify-between dark:text-gray-200">
                   {insight.title}
                   {insight.type === 'positive' ? (
-                    <ArrowUpRight size={16} className="text-blue-600 dark:text-blue-500" />
+                    <ArrowUpRight size={16} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
                   ) : (
                     <AlertCircle size={16} className="text-gray-400 dark:text-gray-500" />
                   )}

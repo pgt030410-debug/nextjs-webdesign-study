@@ -5,6 +5,7 @@ class UserBase(SQLModel):
     email: str = Field(unique=True, index=True)
     organization_id: int
     role: str = Field(default="viewer")
+    subscription_tier: str = Field(default="starter")
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -23,3 +24,4 @@ class Token(SQLModel):
 class TokenData(SQLModel):
     email: Optional[str] = None
     organization_id: Optional[int] = None
+    role: Optional[str] = None

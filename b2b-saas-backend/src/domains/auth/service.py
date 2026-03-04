@@ -33,8 +33,9 @@ async def verify_token(token: str) -> Optional[TokenData]:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")
         org_id: int = payload.get("org_id")
+        role: str = payload.get("role")
         if email is None or org_id is None:
             return None
-        return TokenData(email=email, organization_id=org_id)
+        return TokenData(email=email, organization_id=org_id, role=role)
     except JWTError:
         return None

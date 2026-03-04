@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getAuthUser } from '@/app/actions/auth'
 
 //
 // [Phase 8] Optimize Campaign Proxy
@@ -12,9 +13,13 @@ export async function POST(
     { params }: { params: Promise<{ id: string }> } // Route handler Promise unwrapping required in next 15+
 ) {
     try {
+        const user = await getAuthUser();
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { id } = await params
-        // Temporary Org ID handling for initial version constraints
-        const organization_id = 12
+        const organization_id = user.organization_id
 
         const response = await fetch(`${BACKEND_URL}/campaigns/${id}/optimize?organization_id=${organization_id}`, {
             method: 'POST',

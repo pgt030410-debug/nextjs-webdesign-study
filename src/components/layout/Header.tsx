@@ -16,7 +16,10 @@ const Header = async () => {
         {user ? (
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:block">{user.email}</span>
-            <span className="text-xs font-bold text-white bg-blue-600 px-2 py-0.5 rounded-full">
+            <span
+              className="text-xs font-bold text-white px-2 py-0.5 rounded-full"
+              style={{ backgroundColor: 'var(--color-primary-brand, #3b82f6)' }}
+            >
               Org: {user.organization_id}
             </span>
             <form action={logout}>

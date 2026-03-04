@@ -53,11 +53,17 @@ This is a B2B SaaS dashboard designed for AI Marketing Performance management. I
 - **Recharts Thread Relief:** Safely insulated the heavy initial SVG resize & calculations of the `ResponsiveContainer` by delaying the chart mount by `900ms` (post-transition).
 - **Interactive States:** Handled hover/tap feedback efficiently on data table rows and actionable buttons without physics-engine overhead.
 
+### Step 6: Workflow Automation (Phase 14) [LATEST]
+- **Approval Logic:** Implemented `status` field expansion in `Campaign` model and RBAC-protected endpoints for approval/rejection.
+- **Comments Subsystem:** Added `CampaignComment` model and CRUD API for internal team discussions.
+- **Kanban Board:** Developed a highly interactive board view using `@dnd-kit/core` and `@dnd-kit/sortable`.
+- **UI View Toggle:** Integrated a view-switching mechanism (Table vs Board) in the main campaign list.
+
 ## Technical Stack
-- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Lucide Icons.
+- **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, Lucide Icons, `@dnd-kit`.
 - **Backend:** FastAPI, Python, SQLAlchemy, SQLModel, PostgreSQL (Supabase).
 - **Database Driver:** `asyncpg` for asynchronous PostgreSQL communication.
-- **Communication:** Proxy pattern for secure and unified API access.
+- **Communication:** Proxy pattern and Server Actions for unified API access.
 
 ## MCP Optimizations (Model Context Protocol)
 - **Database Access:** SQLite/PostgreSQL servers integrated via Antigravity config for direct DB queries and schema validation without going through the backend.

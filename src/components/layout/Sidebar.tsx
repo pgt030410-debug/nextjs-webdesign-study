@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Settings, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, Menu, X, CreditCard, FileText } from 'lucide-react';
+import { useThemeStore } from '@/store/useThemeStore';
 
 interface NavItem {
   label: string;
@@ -13,13 +14,20 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { label: 'Reports', href: '/reports', icon: FileText },
   { label: 'Users', href: '/users', icon: Users },
   { label: 'Settings', href: '/settings', icon: Settings },
+  { label: 'Billing', href: '/billing', icon: CreditCard },
 ];
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { brandName, brandColor, isCustomColor } = useThemeStore();
+
+  // Mounted check for hydration mismatch prevention
+  const [mounted, setMounted] = useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   return (
     <>
@@ -46,7 +54,12 @@ const Sidebar: React.FC = () => {
           }`}
       >
         <div className="flex h-16 items-center border-b border-gray-200 dark:border-white/10 px-6 justify-between md:justify-start">
-          <span className="text-xl font-bold text-blue-600 dark:text-blue-500">SaaS Admin</span>
+          <span
+            className={`text-xl font-bold transition-colors ${!isCustomColor ? `bg-clip-text text-transparent bg-gradient-to-r from-${brandColor}-600 to-${brandColor}-400 dark:from-${brandColor}-400 dark:to-${brandColor}-300` : ''}`}
+            style={isCustomColor ? { color: 'var(--color-primary-brand, #3b82f6)' } : {}}
+          >
+            {mounted ? brandName : 'SaaS Admin'}
+          </span>
           {/* Close button inside sidebar on mobile */}
           <button className="md:hidden text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" onClick={() => setIsOpen(false)}>
             <X size={20} />
@@ -61,11 +74,12 @@ const Sidebar: React.FC = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setIsOpen(false)} // Close sidebar on link click (mobile)
+                onClick={() => setIsOpen(false)} // Close sidebar on mobile
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${isActive
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400'
+                  ? (!isCustomColor ? `bg-${brandColor}-50 text-${brandColor}-600 dark:bg-${brandColor}-900/40 dark:text-${brandColor}-400 font-semibold` : 'font-semibold')
                   : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50'
                   }`}
+                style={isActive && isCustomColor ? { backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' } : {}}
               >
                 <Icon size={20} />
                 {item.label}

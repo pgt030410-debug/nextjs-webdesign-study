@@ -6,7 +6,7 @@
 
 import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes';
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Tooltip } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Campaign } from '../campaigns/CampaignTable';
 import { formatKRW } from '@/lib/utils/currency';
@@ -20,7 +20,7 @@ interface MediaCompareData {
 const chartConfig = {
     totalBudget: {
         label: 'Total Budget (KRW)',
-        color: '#3b82f6',
+        color: 'var(--color-primary-brand, #3b82f6)',
     },
     avgRoas: {
         label: 'Avg. ROAS (x)',
@@ -125,7 +125,7 @@ const MediaCompareChart: React.FC<MediaCompareChartProps> = ({ campaigns }) => {
                     <Bar
                         yAxisId="left"
                         dataKey="totalBudget"
-                        fill="#3b82f6"
+                        fill="var(--color-primary-brand, #3b82f6)"
                         radius={[4, 4, 0, 0]}
                         name="Total Budget"
                     />

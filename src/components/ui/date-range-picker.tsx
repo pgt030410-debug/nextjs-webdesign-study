@@ -88,9 +88,10 @@ export function DateRangePicker({ onDateChange }: DateRangePickerProps) {
                         key={item.id}
                         onClick={() => handlePresetClick(item.id as Preset)}
                         className={`px-3 py-1.5 text-xs font-medium rounded-sm transition-colors ${activePreset === item.id
-                                ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                            ? 'bg-white dark:bg-gray-700 shadow-sm'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                             }`}
+                        style={activePreset === item.id ? { color: 'var(--color-primary-brand, #3b82f6)' } : {}}
                     >
                         {item.label}
                     </button>

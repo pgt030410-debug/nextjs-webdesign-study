@@ -1,22 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
-import { AlertCircle, Plus, Download } from 'lucide-react';
-import CampaignTable, { Campaign } from './CampaignTable';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Download, AlertCircle, Plus } from 'lucide-react';
 import CampaignModal from './CampaignModal';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { CampaignTable, type Campaign } from './CampaignTable';
+import { CampaignKanban } from './CampaignKanban';
 import { deleteCampaign, optimizeCampaign } from '@/app/actions/campaigns';
-import toast from 'react-hot-toast';
+import { getAuthUser } from '@/app/actions/auth';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
-interface CampaignListProps {
-    initialCampaigns: Campaign[];
-    error: string | null;
-}
-
-export default function CampaignList({ initialCampaigns, error }: CampaignListProps) {
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+export default function CampaignList({ initialCampaigns, error }: { initialCampaigns: Campaign[]; error: string | null; }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [localCampaigns, setLocalCampaigns] = useState<Campaign[]>(initialCampaigns);
+    const [userRole, setUserRole] = useState<string>('viewer');
+    const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table');
     const router = useRouter();
+
+    useEffect(() => {
+        getAuthUser().then(user => {
+            if (user && user.role) {
+                setUserRole(user.role);
+            }
+        });
+    }, []);
 
     const handleSuccess = () => {
         // Refresh the server component data
@@ -82,8 +90,22 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Active Campaigns</h2>
-                <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Campaigns</h2>
+                <div className="flex items-center gap-3">
+                    <div className="bg-zinc-100 dark:bg-zinc-800 p-1 rounded-lg flex text-sm">
+                        <button
+                            onClick={() => setViewMode('table')}
+                            className={`px-3 py-1.5 rounded-md transition-colors ${viewMode === 'table' ? 'bg-white dark:bg-zinc-700 shadow-sm font-medium text-zinc-900 dark:text-zinc-100' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+                        >
+                            Table
+                        </button>
+                        <button
+                            onClick={() => setViewMode('kanban')}
+                            className={`px-3 py-1.5 rounded-md transition-colors ${viewMode === 'kanban' ? 'bg-white dark:bg-zinc-700 shadow-sm font-medium text-zinc-900 dark:text-zinc-100' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+                        >
+                            Board
+                        </button>
+                    </div>
                     <button
                         onClick={handleDownloadCSV}
                         className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
@@ -92,15 +114,18 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
                         <Download size={16} />
                         <span className="hidden sm:inline">CSV 다운로드</span>
                     </button>
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsModalOpen(true)}
-                        className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 dark:shadow-none"
-                    >
-                        <Plus size={16} />
-                        캠페인 추가
-                    </motion.button>
+                    {userRole !== 'viewer' && (
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setIsModalOpen(true)}
+                            className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors"
+                            style={{ backgroundColor: 'var(--color-primary-brand, #3b82f6)' }}
+                        >
+                            <LuPlus size={16} />
+                            캠페인 추가
+                        </motion.button>
+                    )}
                 </div>
             </div>
 
@@ -110,7 +135,7 @@ export default function CampaignList({ initialCampaigns, error }: CampaignListPr
                     <p>{error}</p>
                 </div>
             ) : (
-                <CampaignTable data={initialCampaigns} onDelete={handleDeleteCampaign} onOptimize={handleOptimizeCampaign} />
+                <CampaignTable data={initialCampaigns} userRole={userRole} onDelete={handleDeleteCampaign} onOptimize={handleOptimizeCampaign} />
             )}
 
             <CampaignModal
