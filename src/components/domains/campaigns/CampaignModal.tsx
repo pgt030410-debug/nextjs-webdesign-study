@@ -22,12 +22,12 @@ interface CampaignModalProps {
 const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSuccess, campaignId, campaignName }) => {
   const [activeTab, setActiveTab] = useState<'info' | 'comments'>('info');
 
-  // Form State
   const [formData, setFormData] = useState({
     name: campaignName || '',
     advertiser: '',
     budget: '',
     roas: '',
+    status: 'draft', // Default state for new campaigns
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -64,12 +64,13 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
       const formDataToSubmit = new FormData(form);
       formDataToSubmit.set('budget', formData.budget);
       formDataToSubmit.set('roas', formData.roas);
+      formDataToSubmit.set('status', formData.status);
 
       await createCampaign(formDataToSubmit);
 
       onSuccess();
       onClose();
-      setFormData({ name: '', advertiser: '', budget: '', roas: '' });
+      setFormData({ name: '', advertiser: '', budget: '', roas: '', status: 'draft' });
       toast.success('새 캠페인이 추가되었습니다.');
     } catch (error: unknown) {
       console.error('Error creating campaign:', error);
@@ -171,6 +172,20 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
                         onChange={(e) => setFormData({ ...formData, roas: e.target.value })}
                       />
                     </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="status" className="text-sm font-medium text-gray-700 dark:text-gray-300">캠페인 상태</label>
+                    <select
+                      id="status" name="status"
+                      className="rounded-lg border border-gray-200 dark:border-white/20 bg-white dark:bg-gray-900 dark:text-white px-3 py-2 text-sm focus:border-blue-500"
+                      value={formData.status}
+                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    >
+                      <option value="draft">기획 (Draft)</option>
+                      <option value="pending_approval">결재 대기 (Approval Pending)</option>
+                      <option value="active">진행 중 (Active)</option>
+                      <option value="ended">보류/종료 (Ended)</option>
+                    </select>
                   </div>
                 </>
               )}

@@ -389,3 +389,11 @@
 - **테마 색상(Appearance) 팔레트 투명화 버그 수정**:
   - `/settings/appearance`의 "기본 브랜드 색상" 7가지 프리셋 버튼이 Tailwind 동적 클래스 컴파일 누락으로 인해 투명한 박스로만 렌더링되던 버그 수정.
   - 버튼 요소에 직접 `style={{ backgroundColor: color.hex }}` 인라인 속성을 부여하여 사용자가 7가지 브랜딩 컬러 팔레트들을 직관적으로 보고 선택할 수 있도록 데이터 및 뷰어 완전 복구 조치.
+
+## [2026-03-05 16:15:00] 추가 작업 - Phase 17.6: Board API 버그 픽스 및 캠페인 세부 기능 추가
+- **칸반 보드(Kanban) API 404 라우팅 버그 수정**:
+  - 대시보드 보드 뷰(Kanban)에서 카드를 드래그 앤 드롭으로 이동할 때, 로컬 개발 환경(`.env.local`)의 `NEXT_PUBLIC_API_URL` 환경 변수를 파싱하는 과정에서 `/campaigns` 접두사가 누락되어 백엔드 API 호출이 실패(404 Not Found)하는 현상 수정.
+  - `getApiBase()` 동적 유틸리티 함수를 생성하고 Server Action 로직(`src/app/actions/campaigns.ts`) 내 하드코딩된 변수들을 모두 교체하여 데이터 플로우 정상화 완수.
+- **캠페인 생성 시 초기 상태(Status) 지정 기능 추가**:
+  - 텅 비어있던 '새 캠페인 추가' 폼 모달창(`CampaignModal.tsx`) 하단에 상태(기획, 결재 대기, 진행 중, 보류/종료) 필드를 신규 생성.
+  - 사용자가 드롭다운 형태로 초기 파이프라인 단계를 명시하여 추가할 수 있도록 뷰 컴포넌트 추가 및 Server Action(`formDataToSubmit.set`) 페이로드 데이터 바인딩 로직 보완.

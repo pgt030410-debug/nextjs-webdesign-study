@@ -8995,3 +8995,153 @@ INFO:     127.0.0.1:57103 - "GET /settings/webhooks HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57103 - "GET /settings/webhooks HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57125 - "GET /settings/webhooks HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57125 - "GET /settings/webhooks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58046 - "GET /campaigns/?organization_id=12 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58050 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58089 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58093 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58095 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58093 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58095 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58112 - "GET /users/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58112 - "GET /users/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58112 - "GET /settings/webhooks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58112 - "GET /settings/webhooks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58124 - "GET /settings/webhooks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58124 - "GET /settings/webhooks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58146 - "GET /audit/logs?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58146 - "GET /audit/logs?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58159 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59088 - "GET /campaigns/?organization_id=12 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59090 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59098 - "POST /auth/login HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/applications.py", line 1160, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/middleware/cors.py", line 95, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/middleware/cors.py", line 153, in simple_response
+    await self.app(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/routing.py", line 119, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/routing.py", line 105, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/routing.py", line 431, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/fastapi/routing.py", line 313, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/src/domains/auth/router.py", line 37, in login
+    user = session.exec(statement).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlmodel/orm/session.py", line 75, in exec
+    results = super().execute(
+              ^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2249, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 527, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/parkkyutae/.gemini/antigravity/scratch/nextjs-webdesign-study/b2b-saas-backend/venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+[SQL: SELECT "user".email, "user".organization_id, "user".role, "user".subscription_tier, "user".id, "user".hashed_password 
+FROM "user" 
+WHERE "user".email = %(email_1)s]
+[parameters: {'email_1': 'pgt2003@naver.com'}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+INFO:     127.0.0.1:59104 - "POST /auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59109 - "POST /auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59116 - "POST /auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59116 - "POST /auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59119 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59124 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59124 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59128 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59134 - "PUT /18/status?organization_id=12 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59134 - "PUT /18/status?organization_id=12 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59134 - "PUT /18/status?organization_id=12 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59134 - "PUT /17/status?organization_id=12 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59349 - "PUT /15/status?organization_id=12 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59561 - "PUT /campaigns/15/status?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59561 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59563 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59568 - "PUT /campaigns/17/status?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59568 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59575 - "GET /campaigns/?organization_id=12 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59582 - "GET /analytics/timeseries?organization_id=12&days=30 HTTP/1.1" 200 OK

@@ -3,7 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { getAuthUser, getAuthToken } from './auth';
 
-const BACKEND_URL = 'https://nextjs-webdesign-study.onrender.com/campaigns/';
+const getApiBase = () => {
+    return process.env.NEXT_PUBLIC_API_URL
+        ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/campaigns`
+        : 'https://nextjs-webdesign-study.onrender.com/campaigns';
+};
 
 export async function createCampaign(formData: FormData) {
     const user = await getAuthUser();
@@ -17,11 +21,11 @@ export async function createCampaign(formData: FormData) {
         advertiser: formData.get('advertiser') as string,
         budget: parseFloat(formData.get('budget') as string),
         roas: parseFloat(formData.get('roas') as string),
-        status: 'active',
+        status: (formData.get('status') as string) || 'draft',
         organization_id: user.organization_id,
     };
 
-    const response = await fetch(`${BACKEND_URL}?organization_id=${user.organization_id}`, {
+    const response = await fetch(`${getApiBase()}?organization_id=${user.organization_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -54,7 +58,7 @@ export async function deleteCampaign(id: number) {
         throw new Error('Unauthorized');
     }
 
-    const response = await fetch(`${BACKEND_URL}${id}?organization_id=${user.organization_id}`, {
+    const response = await fetch(`${getApiBase()}/${id}?organization_id=${user.organization_id}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -78,9 +82,7 @@ export async function optimizeCampaign(id: number) {
         throw new Error('Unauthorized');
     }
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${API_BASE}/${id}/optimize?organization_id=${user.organization_id}`, {
+    const response = await fetch(`${getApiBase()}/${id}/optimize?organization_id=${user.organization_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -102,9 +104,7 @@ export async function updateCampaignStatus(id: number, status: string) {
     const token = await getAuthToken();
     if (!user || !token) throw new Error('Unauthorized');
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${API_BASE}/${id}/status?organization_id=${user.organization_id}`, {
+    const response = await fetch(`${getApiBase()}/${id}/status?organization_id=${user.organization_id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -134,9 +134,7 @@ export async function getCampaignComments(id: number) {
     const token = await getAuthToken();
     if (!user || !token) return [];
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${API_BASE}/${id}/comments`, {
+    const response = await fetch(`${getApiBase()}/${id}/comments`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -156,9 +154,7 @@ export async function createCampaignComment(id: number, content: string) {
     const token = await getAuthToken();
     if (!user || !token) throw new Error('Unauthorized');
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || BACKEND_URL.replace(/\/$/, "");
-
-    const response = await fetch(`${API_BASE}/${id}/comments`, {
+    const response = await fetch(`${getApiBase()}/${id}/comments`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
