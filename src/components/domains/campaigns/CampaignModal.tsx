@@ -66,7 +66,12 @@ const CampaignModal: React.FC<CampaignModalProps> = ({ isOpen, onClose, onSucces
       formDataToSubmit.set('roas', formData.roas);
       formDataToSubmit.set('status', formData.status);
 
-      await createCampaign(formDataToSubmit);
+      const result = await createCampaign(formDataToSubmit);
+
+      if (!result.success) {
+        toast.error(`캠페인 생성 실패: ${result.error || '알 수 없는 오류'}`);
+        return;
+      }
 
       onSuccess();
       onClose();

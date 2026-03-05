@@ -9,46 +9,51 @@ const getApiBase = () => {
         : 'https://nextjs-webdesign-study.onrender.com/campaigns';
 };
 
-export async function createCampaign(formData: FormData) {
-    const user = await getAuthUser();
-    const token = await getAuthToken();
-    if (!user || !token) {
-        throw new Error('Unauthorized');
-    }
-
-    const payload = {
-        name: formData.get('name') as string,
-        advertiser: formData.get('advertiser') as string,
-        budget: parseFloat(formData.get('budget') as string),
-        roas: parseFloat(formData.get('roas') as string),
-        status: (formData.get('status') as string) || 'draft',
-        organization_id: user.organization_id,
-    };
-
-    const response = await fetch(`${getApiBase()}?organization_id=${user.organization_id}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-        let errorMessage = `Failed to create campaign: ${response.statusText}`;
-        try {
-            const errorData = await response.json();
-            if (errorData.detail) errorMessage = errorData.detail;
-        } catch {
-            const errorText = await response.text();
-            if (errorText) errorMessage = errorText;
+export async function createCampaign(formData: FormData): Promise<{ success: boolean; error?: string }> {
+    try {
+        const user = await getAuthUser();
+        const token = await getAuthToken();
+        if (!user || !token) {
+            return { success: false, error: '로그인이 필요합니다.' };
         }
-        throw new Error(errorMessage);
-    }
 
-    // Next.js 캐시 무효화 -> 즉시 서버 컴포넌트 데이터 리페치
-    revalidatePath('/');
-    return { success: true };
+        const payload = {
+            name: formData.get('name') as string,
+            advertiser: formData.get('advertiser') as string,
+            budget: parseFloat(formData.get('budget') as string),
+            roas: parseFloat(formData.get('roas') as string),
+            status: (formData.get('status') as string) || 'draft',
+            organization_id: user.organization_id,
+        };
+
+        const response = await fetch(`${getApiBase()}?organization_id=${user.organization_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            let errorMessage = `캠페인 생성 실패: ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                if (errorData.detail) errorMessage = errorData.detail;
+            } catch {
+                const errorText = await response.text();
+                if (errorText) errorMessage = errorText;
+            }
+            return { success: false, error: errorMessage };
+        }
+
+        // Next.js 캐시 무효화 -> 즉시 서버 컴포넌트 데이터 리페치
+        revalidatePath('/');
+        return { success: true };
+    } catch (error) {
+        console.error('createCampaign error:', error);
+        return { success: false, error: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.' };
+    }
 }
 
 export async function deleteCampaign(id: number) {
