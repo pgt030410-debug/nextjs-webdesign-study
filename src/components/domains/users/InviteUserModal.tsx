@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface InviteUserModalProps {
     isOpen: boolean;
@@ -11,6 +12,7 @@ interface InviteUserModalProps {
 }
 
 export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalProps) {
+    const t = useTranslations('Users.invite');
     const [email, setEmail] = useState('');
     const [role, setRole] = useState<'Admin' | 'Editor' | 'Viewer'>('Viewer');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +22,7 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email) {
-            toast.error('이메일을 입력해주세요.');
+            toast.error(t('missingEmail'));
             return;
         }
 
@@ -29,7 +31,7 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
         // Simulate API call
         setTimeout(() => {
             setIsSubmitting(false);
-            toast.success(`${email} 주소로 초대 메일이 발송되었습니다.`);
+            toast.success(t('success', { email }));
             setEmail('');
             setRole('Viewer');
             onSuccess();
@@ -52,22 +54,22 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                 </button>
 
                 <div className="p-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">팀원 초대</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{t('title')}</h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                        이메일 주소와 역할을 설정하여 조직에 새로운 팀원을 초대합니다.
+                        {t('description')}
                     </p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                이메일 주소 <span className="text-red-500">*</span>
+                                {t('email')} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="colleague@company.com"
+                                placeholder={t('emailPlaceholder')}
                                 className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
@@ -75,7 +77,7 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
 
                         <div>
                             <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                역할 (Role) <span className="text-red-500">*</span>
+                                {t('role')} <span className="text-red-500">*</span>
                             </label>
                             <select
                                 id="role"
@@ -83,9 +85,9 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                                 onChange={(e) => setRole(e.target.value as "Admin" | "Editor" | "Viewer")}
                                 className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="Admin">Admin (최고 관리자)</option>
-                                <option value="Editor">Editor (캠페인 편집자)</option>
-                                <option value="Viewer">Viewer (읽기 전용)</option>
+                                <option value="Admin">{t('roleAdmin')}</option>
+                                <option value="Editor">{t('roleEditor')}</option>
+                                <option value="Viewer">{t('roleViewer')}</option>
                             </select>
                         </div>
 
@@ -95,7 +97,7 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                                 onClick={onClose}
                                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                             >
-                                취소
+                                {t('cancel')}
                             </button>
                             <button
                                 type="submit"
@@ -106,10 +108,10 @@ export function InviteUserModal({ isOpen, onClose, onSuccess }: InviteUserModalP
                                 {isSubmitting ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                        전송 중...
+                                        {t('submitting')}
                                     </>
                                 ) : (
-                                    '초대 메일 발송'
+                                    t('submit')
                                 )}
                             </button>
                         </div>

@@ -6,8 +6,11 @@ import { MessageSquare, BellRing, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { getWebhookSettings, saveWebhookSettings } from '@/app/actions/settings';
+import { useTranslations } from 'next-intl';
 
 export default function WebhookSettings() {
+    const t = useTranslations('Settings.webhook');
+
     const [slackUrl, setSlackUrl] = useState('');
     const [kakaoKey, setKakaoKey] = useState('');
     const [isSaving, setIsSaving] = useState(false);
@@ -32,60 +35,75 @@ export default function WebhookSettings() {
         setIsSaving(true);
         try {
             await saveWebhookSettings(slackUrl, kakaoKey);
-            toast.success('알림 연동 설정이 저장되었습니다.');
+            toast.success(t('success'));
         } catch (error: any) {
-            toast.error(error.message || '설정 저장에 실패했습니다.');
+            toast.error(error.message || t('error'));
         } finally {
             setIsSaving(false);
         }
     };
 
     return (
-        <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900 mt-6">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <BellRing size={20} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
-                    Integration (알림 연동)
-                </CardTitle>
-                <CardDescription>
-                    AI Insight가 감지한 위험 신호나 보고서를 외부 메신저로 받아볼 수 있도록 연동합니다.
-                </CardDescription>
+        <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900 mt-6 overflow-hidden">
+            <CardHeader
+                className="rounded-t-xl border-b border-gray-100 dark:border-white/10 py-4 bg-white dark:bg-gray-900"
+            >
+                <div className="flex flex-row items-center gap-4">
+                    <div
+                        className="rounded-xl border p-2 flex items-center justify-center relative shadow-sm"
+                        style={{
+                            backgroundColor: 'color-mix(in srgb, var(--color-primary-brand) 10%, transparent)',
+                            borderColor: 'color-mix(in srgb, var(--color-primary-brand) 20%, transparent)',
+                            boxShadow: '0 0 20px -5px color-mix(in srgb, var(--color-primary-brand) 40%, transparent)'
+                        }}
+                    >
+                        <BellRing size={20} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} className="relative z-10" />
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                        <CardTitle className="text-lg dark:text-white font-bold">
+                            {t('title')}
+                        </CardTitle>
+                        <CardDescription className="text-sm dark:text-gray-400">
+                            {t('description')}
+                        </CardDescription>
+                    </div>
+                </div>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 pt-6">
                 {/* Slack Integration */}
                 <div className="space-y-3">
                     <label htmlFor="slack-webhook" className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                         <MessageSquare size={16} className="text-gray-500" />
-                        Slack Incoming Webhook
+                        {t('slackTitle')}
                     </label>
                     <div className="flex gap-3">
                         <input
                             id="slack-webhook"
-                            placeholder="Slack Webhook URL을 입력하세요"
+                            placeholder={t('slackPlaceholder')}
                             value={slackUrl}
                             onChange={(e) => setSlackUrl(e.target.value)}
                             className="flex h-10 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-50 dark:focus:ring-blue-500"
                         />
                     </div>
-                    <p className="text-xs text-gray-500">슬랙 앱 설정에서 발급받은 Incoming Webhook URL을 입력하세요.</p>
+                    <p className="text-xs text-gray-500">{t('slackHelp')}</p>
                 </div>
 
                 {/* Kakao Integration */}
                 <div className="space-y-3 pt-4 border-t border-gray-100 dark:border-gray-800">
                     <label htmlFor="kakao-key" className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                         <div className="flex h-4 w-4 items-center justify-center rounded bg-[#FEE500] text-black font-bold text-[10px]">K</div>
-                        카카오 알림톡 호스트 키
+                        {t('kakaoTitle')}
                     </label>
                     <div className="flex gap-3">
                         <input
                             id="kakao-key"
-                            placeholder="비즈메시지 발급 API Key 입력"
+                            placeholder={t('kakaoPlaceholder')}
                             value={kakaoKey}
                             onChange={(e) => setKakaoKey(e.target.value)}
                             className="flex h-10 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-50 dark:focus:ring-blue-500"
                         />
                     </div>
-                    <p className="text-xs text-gray-500">비즈니스 인증이 완료된 공식 알림톡 딜리버리 API 키가 필요합니다.</p>
+                    <p className="text-xs text-gray-500">{t('kakaoHelp')}</p>
                 </div>
 
                 <div className="pt-6">
@@ -98,12 +116,12 @@ export default function WebhookSettings() {
                             {isSaving ? (
                                 <span className="flex items-center gap-2">
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                                    저장 중...
+                                    {t('saving')}
                                 </span>
                             ) : (
                                 <span className="flex items-center gap-2">
                                     <Save size={16} />
-                                    설정 저장
+                                    {t('save')}
                                 </span>
                             )}
                         </button>

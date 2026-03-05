@@ -1,0 +1,18 @@
+{
+    "name": "B2B SaaS Dashboard",
+    "short_name": "SaaS Dash",
+    "description": "B2B Marketing Performance Dashboard",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#3b82f6",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icons/icon.svg",
+            "sizes": "192x192 512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}

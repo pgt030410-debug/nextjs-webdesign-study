@@ -138,9 +138,36 @@
 2.  **다중 통화(Multi-Currency) 및 실시간 환율 동기화:** KRW뿐만 아니라 USD, JPY 등 다양한 통화로 실적을 볼 수 있게 통화 스위처(Currency Switcher)를 도입하고, 실시간 환율 API(OpenExchangeRates 등)와 연동합니다.
 3.  **글로벌 결제 수단 및 조세(Tax) 처리 분기:** Stripe 기반의 해외 결제 시 국가별 부가세(VAT, GST)를 자동 계산하고 영수증 포맷을 국가 표준 세법에 맞추는 글로벌 엔터프라이즈 빌링 시스템을 마무리합니다.
 
+### 🤝 Phase 18: B2B CRM 연동 및 마케팅 자동화 (CRM & Marketing Automation)
+엔터프라이즈 B2B 고객을 위한 외부 리드(Lead) 연동과 이메일 자동화 파이프라인.
+1. **Salesforce / HubSpot OAuth 연동:** 써드파티 인그레이션을 통해 캠페인으로 유입된 고객 리드를 양방향 전송.
+2. **이메일 드립 캠페인(Drip Campaign) 빌더:** 대시보드에서 직접 이메일 템플릿을 드래그 앤 드롭으로 구성하고, 단계별로 자동 메일(Welcome, Follow-up)을 발송하는 워크플로우 엔진.
+
+### 🎬 Phase 19: AI 광고 소재 및 카피 무한 생성기 (AI Creative Generation)
+텍스트 분석을 뛰어넘는 Generative AI 기반 콘텐츠 자동 양산기.
+1. **DALL-E / Midjourney 배너 생성기:** 캠페인 주제 입력 시 광고 배너용 배경 이미지와 문구가 들어간 크리에이티브 수십 장을 5초 만에 생성.
+2. **다국어 A/B 테스트용 카피라이팅 엔진:** GPT-4를 활용하여 한 언어로 작성한 카피를 타겟 시장의 뉘앙스에 맞는 10개국 언어별 A/B 카피로 변형.
+
+### 🔐 Phase 20: 오프라인/O2O 성과 옴니채널 연동 (Omnichannel Attribution)
+온라인에 국한되지 않은 오프라인 마케팅 기여도(Attribution) 분석.
+1. **동적 QR 코드 생성 및 트래킹:** 옥외광고나 지류 쿠폰용 동적 QR을 생성하여 오프라인 유입 성과를 대시보드 트래픽과 결합.
+2. **매장 POS 데이터 동기화:** 오프라인 결제 데이터를 API로 연동(Sync)받아, 어떤 온라인 캠페인이 실제 오프라인 매장 매출 지표로 환산되었는지 옴니채널 LTV/ROAS 연산.
+
+### 🦄 Phase 21: 엔터프라이즈 데이터 웨어하우스 분양 (Data Warehouse Export)
+데이터 주도권(Sovereignty)을 요구하는 대기업용 전용 인프라 연동망.
+1. **Bring Your Own DB (BYODB):** 클라이언트가 사용하는 자체 클라우드(AWS S3, Snowflake, BigQuery)로 대시보드 데이터를 매일 자정에 자동 덤프(Dump) 지원.
+2. **실시간 트래픽 Firehose 연동:** Amazon Kinesis 또는 Kafka 커넥터를 제공하여, 캠페인 클릭/전환 원천 로그 스트림을 딜레이 없이 고객사 데이터팀에 제공.
+
+### 🪐 Phase 22: 마켓플레이스 및 써드파티 플러그인 생태계 (Platform Marketplace)
+독립형 SaaS를 넘어, 외부 앱들이 연동되는 에코시스템/플랫폼으로의 확장.
+1. **Developer Open API & Webhooks:** 외부 개발자가 대시보드 캠페인을 제어하거나 데이터를 추출할 수 있는 완전체 Open API 콘솔 발행.
+2. **플러그인 앱 스토어 (App Store):** 외부 업체가 만든 '디스코드 알림 봇', '틱톡 광고 커넥터' 등을 사용자가 클릭 하나로 대시보드에 설치(Install)할 수 있는 플러그인 생태계 구축.
+
 ---
 
 ### 📌 기 진행 상황 요약
 *   ✅ **Phase 1 완료 (인증 기반 공사):** JWT 쿠키 파싱, Route Protection (`2026-02-27`)
 *   ✅ **Phase 2 완료 (상태 관리 로직):** Next.js Server Actions, `/users`, `/settings` 라우팅 (`2026-02-27`)
 *   ✅ **Phase 3 완료 (UX/안정성 고도화):** 엣지 런타임 제약 해결, FormData 422 에러 보완, 반응형 모바일 그리드 완성, Toast 알림 연동 (`2026-02-28`)
+*   ✅ **Phase 4~15 주요 마일스톤 완료:** 화이트라벨링, 멀티턴 AI 챗봇(Gemini), Audit Log, AI Budget Optimizer 개발 및 UI 튜닝 (기한 경과)
+*   ✅ **Phase 16 완료 (모바일 PWA & 스와이프 인터랙션):** Serwist PWA, Framer Motion 제스처 적용, Native Push 토글 연동 (`2026-03-05`)

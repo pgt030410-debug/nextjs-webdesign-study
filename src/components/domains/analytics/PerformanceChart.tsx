@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Campaign } from '../campaigns/CampaignTable';
+import { useTranslations } from 'next-intl';
 
 interface PerformanceData {
   date: string;
@@ -16,24 +17,25 @@ interface PerformanceData {
   conversions: number;
 }
 
-const chartConfig = {
-  clicks: {
-    label: 'Clicks',
-    color: 'var(--color-primary-brand, #3b82f6)',
-  },
-  conversions: {
-    label: 'Conversions',
-    color: '#94a3b8',
-  },
-};
-
 interface PerformanceChartProps {
   campaigns: Campaign[];
 }
 
 const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
   const { theme } = useTheme();
+  const t = useTranslations('Dashboard.performanceChart');
   const [isReady, setIsReady] = React.useState(false);
+
+  const chartConfig = useMemo(() => ({
+    clicks: {
+      label: t('clicks'),
+      color: 'var(--color-primary-brand, #3b82f6)',
+    },
+    conversions: {
+      label: t('conversions'),
+      color: '#94a3b8',
+    },
+  }), [t]);
 
   // Recharts's ResponsiveContainer involves heavy DOM resize observations and SVG calculations.
   // We explicitly delay its rendering until after Framer Motion's initial page transitions 
@@ -82,16 +84,10 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ campaigns }) => {
     return data;
   }, [campaigns]);
 
-  if (!isReady || chartData.length === 0) {
+  if (chartData.length === 0) {
     return (
       <div className="flex h-[300px] w-full items-center justify-center text-sm text-gray-400">
-        {!isReady ? (
-          <div className="flex animate-pulse space-x-2">
-            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-200"></div>
-            <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-400"></div>
-          </div>
-        ) : "차트를 그릴 활성 캠페인 데이터가 없습니다."}
+        {t('empty')}
       </div>
     );
   }

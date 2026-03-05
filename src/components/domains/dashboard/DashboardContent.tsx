@@ -8,8 +8,10 @@ import InsightCard from '@/components/domains/insights/InsightCard';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import CampaignList from '@/components/domains/campaigns/CampaignList';
 import { Campaign } from '@/components/domains/campaigns/CampaignTable';
-
+import PredictiveChart from '@/components/domains/analytics/PredictiveChart';
+import AnomalyAlerts from '@/components/domains/analytics/AnomalyAlerts';
 import { Wallet, MousePointer2, Target, Activity } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SummaryStat {
     title: string;
@@ -28,12 +30,19 @@ const iconMap: Record<string, React.ElementType> = {
 export default function DashboardContent({
     campaigns,
     error,
-    dynamicStats
+    dynamicStats,
+    timeseriesData,
+    currencyCode = 'KRW',
+    exchangeRate = 1
 }: {
     campaigns: Campaign[],
     error: string | null,
-    dynamicStats: SummaryStat[]
+    dynamicStats: SummaryStat[],
+    timeseriesData: any,
+    currencyCode?: string,
+    exchangeRate?: number
 }) {
+    const t = useTranslations('Dashboard');
     const [isMounted, setIsMounted] = React.useState(false);
 
     React.useEffect(() => {
@@ -41,14 +50,12 @@ export default function DashboardContent({
     }, []);
 
     return (
-        <div
-            className={`flex flex-col gap-8 transition-opacity duration-700 ${isMounted ? 'opacity-100' : 'opacity-0'}`}
-        >
+        <div className="flex flex-col gap-8">
             {/* 0. Top Controls: Date Filter */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Overview</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Monitor your ad campaigns and metrics</p>
+                    <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{t('summaryTitle')}</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('summaryDesc')}</p>
                 </div>
                 <DateRangePicker onDateChange={(range, preset) => {
                     console.log('Filtered by date:', range, preset);
@@ -79,22 +86,35 @@ export default function DashboardContent({
                 })}
             </div>
 
-            {/* 2. Middle Section: Analytics (7) & Insights (3) */}
+            {/* 2. Middle Section: Analytics (7) & Insights/Alerts (3) */}
             <div className="grid gap-8 grid-cols-1 lg:grid-cols-10">
-                <div className="lg:col-span-7">
-                    <Card className="border-gray-200 dark:border-white/10 shadow-sm h-full bg-white dark:bg-gray-900">
+                <div className="lg:col-span-7 flex flex-col gap-6">
+                    <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900">
                         <CardHeader>
                             <CardTitle className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                Performance Trends
+                                {t('trendcastingTitle')}
                             </CardTitle>
-                            <p className="text-sm text-gray-400 dark:text-gray-500">Clicks and conversions over the last 7 days</p>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">{t('trendcastingDesc')}</p>
+                        </CardHeader>
+                        <CardContent>
+                            <PredictiveChart data={timeseriesData} />
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900">
+                        <CardHeader>
+                            <CardTitle className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                {t('performanceTitle')}
+                            </CardTitle>
+                            <p className="text-sm text-gray-400 dark:text-gray-500">{t('performanceDesc')}</p>
                         </CardHeader>
                         <CardContent>
                             <PerformanceChart campaigns={campaigns} />
                         </CardContent>
                     </Card>
                 </div>
-                <div className="lg:col-span-3">
+                <div className="lg:col-span-3 flex flex-col gap-6">
+                    <AnomalyAlerts anomalies={timeseriesData?.anomalies || null} />
                     <InsightCard />
                 </div>
             </div>
@@ -104,9 +124,9 @@ export default function DashboardContent({
                 <Card className="border-gray-200 dark:border-white/10 shadow-sm bg-white dark:bg-gray-900">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            Media Performance
+                            {t('mediaTitle')}
                         </CardTitle>
-                        <p className="text-sm text-gray-400 dark:text-gray-500">Budget vs ROAS by Advertiser</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500">{t('mediaDesc')}</p>
                     </CardHeader>
                     <CardContent>
                         <MediaCompareChart campaigns={campaigns} />
@@ -116,7 +136,12 @@ export default function DashboardContent({
 
             {/* 4. Bottom Section: Campaign Table (Client Component) */}
             <div>
-                <CampaignList initialCampaigns={campaigns} error={error} />
+                <CampaignList
+                    initialCampaigns={campaigns}
+                    error={error}
+                    currencyCode={currencyCode}
+                    exchangeRate={exchangeRate}
+                />
             </div>
         </div>
     );

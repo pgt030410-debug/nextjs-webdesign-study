@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 import { fetchUsers } from '@/app/actions/users';
+import { useTranslations } from 'next-intl';
 
 export interface User {
     id: string;
@@ -15,6 +16,7 @@ export interface User {
 }
 
 export function UserTable() {
+    const t = useTranslations('Users.table');
     const [users, setUsers] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -25,38 +27,36 @@ export function UserTable() {
                 id: u.id.toString(),
                 name: u.email.split('@')[0],
                 email: u.email,
-                role: u.role === 'admin' ? 'Admin' : u.role === 'editor' ? 'Editor' : 'Viewer',
-                status: 'Active',
-                lastActive: 'Recently'
+                role: u.role === 'admin' ? t('admin') : u.role === 'editor' ? t('editor') : t('viewer'),
+                status: t('active'),
+                lastActive: t('recently')
             }));
             setUsers(mappedUsers);
             setIsLoading(false);
         };
         loadUsers();
-    }, []);
+    }, [t]);
 
     const getRoleBadgeColor = (role: string) => {
-        switch (role) {
-            case 'Admin': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
-            case 'Editor': return '';
-            case 'Viewer': return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400';
-            default: return 'bg-gray-100 text-gray-700';
-        }
+        if (role === t('admin')) return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
+        if (role === t('editor')) return '';
+        if (role === t('viewer')) return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400';
+        return 'bg-gray-100 text-gray-700';
     };
 
     const getStatusDot = (status: string) => {
-        return status === 'Active' ? 'bg-green-500' : 'bg-yellow-500';
+        return status === t('active') ? 'bg-green-500' : 'bg-yellow-500';
     };
 
     const handleDeleteUser = (id: string, name: string) => {
-        if (confirm(`정말 ${name}님을 조직에서 내보내시겠습니까?`)) {
+        if (confirm(t('confirmRemove', { name }))) {
             setUsers(users.filter(u => u.id !== id));
-            toast.success(`${name}님이 내보내졌습니다.`);
+            toast.success(t('removeSuccess', { name }));
         }
     };
 
     if (isLoading) {
-        return <div className="p-8 text-center text-gray-500">Loading users...</div>;
+        return <div className="p-8 text-center text-gray-500">{t('loading')}</div>;
     }
 
     return (
@@ -64,11 +64,11 @@ export function UserTable() {
             <table className="w-full text-left text-sm whitespace-nowrap">
                 <thead className="bg-gray-50/50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400">
                     <tr>
-                        <th className="px-4 py-3 font-medium">Member</th>
-                        <th className="px-4 py-3 font-medium">Role</th>
-                        <th className="px-4 py-3 font-medium">Status</th>
-                        <th className="px-4 py-3 font-medium">Last Active</th>
-                        <th className="px-4 py-3 font-medium text-right">Actions</th>
+                        <th className="px-4 py-3 font-medium">{t('member')}</th>
+                        <th className="px-4 py-3 font-medium">{t('role')}</th>
+                        <th className="px-4 py-3 font-medium">{t('status')}</th>
+                        <th className="px-4 py-3 font-medium">{t('lastActive')}</th>
+                        <th className="px-4 py-3 font-medium text-right">{t('actions')}</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -91,7 +91,7 @@ export function UserTable() {
                             <td className="px-4 py-3">
                                 <span
                                     className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}
-                                    style={user.role === 'Editor' ? { backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' } : {}}
+                                    style={user.role === t('editor') ? { backgroundColor: 'color-mix(in srgb, var(--color-primary-brand, #3b82f6) 15%, transparent)', color: 'var(--color-primary-brand, #3b82f6)' } : {}}
                                 >
                                     {user.role}
                                 </span>
@@ -112,7 +112,7 @@ export function UserTable() {
                                     aria-label="Remove User"
                                 >
                                     <span className="text-xs border border-gray-200 dark:border-gray-700 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 dark:hover:border-red-800">
-                                        Remove
+                                        {t('remove')}
                                     </span>
                                 </button>
                             </td>
@@ -121,7 +121,7 @@ export function UserTable() {
                     {users.length === 0 && (
                         <tr>
                             <td colSpan={5} className="py-12 text-center text-gray-500 dark:text-gray-400">
-                                조직에 등록된 멤버가 없습니다.
+                                {t('empty')}
                             </td>
                         </tr>
                     )}

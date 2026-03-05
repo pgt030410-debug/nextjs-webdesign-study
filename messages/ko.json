@@ -1,0 +1,360 @@
+{
+    "Settings": {
+        "title": "Settings",
+        "description": "설정을 관리하세요.",
+        "general": {
+            "title": "일반 설정",
+            "description": "워크스페이스 정보 및 알림 설정을 관리합니다.",
+            "workspaceName": "워크스페이스 이름",
+            "contactEmail": "담당자 이메일"
+        },
+        "webhook": {
+            "title": "외부 메신저 연동",
+            "description": "AI Insight가 감지한 리스크 시그널 및 정기 리포트를 받을 외부 메신저를 연결합니다.",
+            "slackTitle": "Slack Incoming Webhook",
+            "slackPlaceholder": "Slack Webhook URL 입력",
+            "slackHelp": "Slack 앱 설정에서 발급받은 Incoming Webhook URL을 입력하세요.",
+            "kakaoTitle": "카카오 알림톡 호스트 키",
+            "kakaoPlaceholder": "비즈메시지 API 키 입력",
+            "kakaoHelp": "비즈니스 인증이 완료된 공식 알림톡 발송 API 키가 필요합니다.",
+            "save": "연동 설정 저장",
+            "saving": "저장 중...",
+            "success": "알림 연동 설정이 성공적으로 저장되었습니다.",
+            "error": "설정 저장에 실패했습니다."
+        },
+        "layout": {
+            "title": "설정",
+            "description": "조직의 기본 설정 및 결제 정보를 관리하세요.",
+            "saveChanges": "변경사항 저장",
+            "tabs": {
+                "general": "일반",
+                "appearance": "디자인 및 테마",
+                "security": "엔터프라이즈 보안",
+                "audit": "감사 로그"
+            }
+        },
+        "appearance": {
+            "title": "디자인 및 테마",
+            "description": "대시보드의 외관을 커스터마이징하세요. 변경사항은 자동으로 저장되고 전체 조직에 적용됩니다. (화이트 라벨링)",
+            "brandIdentity": "브랜드 아이덴티티",
+            "companyName": "회사 / 앱 이름",
+            "companyNamePlaceholder": "애크미 주식회사",
+            "save": "저장",
+            "companyNameHelp": "왼쪽 상단 사이드바와 맞춤 리포트에 표시될 이름입니다.",
+            "themeColor": "테마 색상",
+            "primaryBrandColor": "기본 브랜드 색상",
+            "customHexColor": "맞춤 헥스(Hex) 코드",
+            "apply": "적용",
+            "colorPreview": "색상 미리보기",
+            "colorPreviewDesc": "UI 요소(버튼, 활성화된 내비게이션, 차트 등)에 이 브랜드 색상이 적용되어 일관된 화이트라벨링 뷰를 제공합니다. 주의: Tailwind JIT 컴파일러 작동 방식으로 인해 정밀한 커스텀 색상은 CSS 변수 지정이 필요할 수 있습니다.",
+            "resetSettings": "모든 디자인 설정 초기화",
+            "resetConfirm": "모든 디자인 및 테마 설정을 기본값으로 되돌리시겠습니까?",
+            "resetToast": "디자인 설정이 기본값으로 초기화되었습니다.",
+            "nameEmptyToast": "브랜드 이름은 비워둘 수 없습니다.",
+            "nameUpdatedToast": "브랜드 이름이 업데이트되었습니다!",
+            "hexInvalidToast": "유효하지 않은 색상 코드 형식입니다. (예: #FF5733)",
+            "themeUpdatedToast": "{hex} 색상으로 테마가 업데이트되었습니다!",
+            "themeTranslatedToast": "{label} 색상으로 테마가 변경되었습니다!"
+        },
+        "audit": {
+            "title": "불변 감사 로그 (Audit Logs)",
+            "description": "조직 내 모든 주요 시스템 이벤트에 대한 영구적이고 변조 불가능한 기록입니다.",
+            "searchPlaceholder": "리소스 또는 액션 검색...",
+            "filterLog": "로그 필터링",
+            "empty": "이 조직에 대한 감사 로그가 없습니다.",
+            "columns": {
+                "timestamp": "타임스탬프",
+                "actorId": "작업자 ID",
+                "action": "액션",
+                "resource": "리소스 / 컨텍스트",
+                "ipAddress": "IP 주소"
+            },
+            "userPrefix": "사용자 #{id}"
+        },
+        "security": {
+            "title": "엔터프라이즈 보안 및 SSO",
+            "description": "Single Sign-On (SSO)을 관리하고 조직 전체에 보안 정책을 적용합니다.",
+            "samlTitle": "SAML 2.0 구성",
+            "samlDescription": "Okta, Azure AD, Google Workspace 등의 아이덴티티 공급자(IdP)를 연결합니다.",
+            "idpLabel": "아이덴티티 공급자 (IdP) Entity ID",
+            "ssoLabel": "SSO URL (로그인 엔드포인트)",
+            "certLabel": "X.509 인증서",
+            "saveSso": "SSO 구성 저장",
+            "savingSso": "구성 저장 중...",
+            "successToast": "SSO 구성이 성공적으로 업데이트되었습니다.",
+            "helpTitle": "엔터프라이즈 설정 도움이 필요하신가요?",
+            "helpDesc": "맞춤 SAML 매핑, SCIM 사용자 프로비저닝 또는 전용 VPN 터널이 필요하다면 담당 엔터프라이즈 기술 어카운트 매니저(TAM)에게 문의하세요.",
+            "push": {
+                "unsupported": "이 브라우저는 푸시 알림을 지원하지 않습니다.",
+                "alreadyGranted": "푸시 알림은 이미 허용되어 있습니다. OS 설정에서 차단해야 합니다.",
+                "successTitle": "B2B SaaS 대시보드",
+                "successBody": "푸시 알림이 성공적으로 설정되었습니다! ROAS 급락 등 중요 알림을 받을 수 있습니다.",
+                "success": "푸시 알림이 활성화되었습니다!",
+                "denied": "푸시 알림 권한이 거부되었습니다. 브라우저 설정에서 허용해주세요.",
+                "error": "권한 요청 중 오류가 발생했습니다.",
+                "title": "긴급 푸시 알림 (Web Push)",
+                "description": "브라우저나 앱이 닫혀 있어도 캠페인 예산 및 성과 이상징후(Anomaly) 알림을 스마트폰이나 데스크탑으로 수신합니다.",
+                "blocked": "브라우저 설정에서 알림 권한이 차단되어 있습니다. 설정 변경 후 새로고침 해주세요."
+            }
+        }
+    },
+    "Auth": {
+        "login": "로그인",
+        "logout": "로그아웃",
+        "loginForm": {
+            "title": "B2B SaaS Dashboard",
+            "subtitle": "마케팅 성과 관리를 위해 계정에 로그인하세요",
+            "email": "이메일",
+            "password": "비밀번호",
+            "submitBtn": "로그인",
+            "submitting": "로그인 중...",
+            "noAccount": "계정이 없으신가요?",
+            "signUpLink": "회원가입",
+            "invalidCreds": "이메일 또는 비밀번호가 올바르지 않습니다.",
+            "error": "로그인 중 오류가 발생했습니다."
+        },
+        "registerForm": {
+            "title": "회원가입 (Sign Up)",
+            "subtitle": "새로운 조직을 생성하거나 기존 조직에 가입하세요",
+            "orgId": "조직(Organization) ID",
+            "orgHelp": "조직 ID를 기반으로 데이터가 분리됩니다.",
+            "email": "이메일",
+            "password": "비밀번호",
+            "submitBtn": "계정 생성",
+            "submitting": "가입 중...",
+            "hasAccount": "이미 계정이 있으신가요?",
+            "loginLink": "로그인",
+            "error": "가입 중 오류가 발생했습니다."
+        }
+    },
+    "Navigation": {
+        "dashboard": "대시보드",
+        "reports": "리포트",
+        "users": "유저 관리",
+        "settings": "설정",
+        "billing": "결제",
+        "overview": "요약"
+    },
+    "Dashboard": {
+        "totalSpend": "총 광고비",
+        "projectedEom": "월말 예상 소진액: {amount}",
+        "avgRoas": "평균 ROAS",
+        "avgAcross": "전체 캠페인 평균",
+        "estConversions": "추정 전환수",
+        "estFromBudget": "광고 예산 기반 추정",
+        "activeCampaigns": "활성 캠페인",
+        "currentlyRunning": "현재 운영 중",
+        "summaryTitle": "대시보드 요약",
+        "summaryDesc": "광고 캠페인 및 주요 지표를 중앙에서 모니터링하세요",
+        "trendcastingTitle": "Trendcasting (스마트 예산 예측)",
+        "trendcastingDesc": "과거 소진액 기반 7일 후 예상 광고비 선형 회귀 분석",
+        "performanceTitle": "퍼포먼스 인사이트",
+        "performanceDesc": "ROAS 및 추정 전환수 동향 그래프",
+        "mediaTitle": "지면별 광고 효율 비교",
+        "mediaDesc": "캠페인 예산 대비 ROAS 분포",
+        "anomaly": {
+            "loading": "이상 징후 분석 예측",
+            "noAlertsTitle": "이상 징후 알림",
+            "noAlertsDesc": "최근 감지된 이상 징후가 없습니다. 캠페인이 정상적으로 운영되고 있습니다.",
+            "actionRequired": "조치 필요 ({count})",
+            "reviewNeeded": "검토 요망",
+            "metric": "(지표: {metric})",
+            "dropEstimate": "수치 하락 추정: {value}"
+        },
+        "insights": {
+            "title": "AI 퍼포먼스 인사이트",
+            "mock1Title": "Budget Optimization",
+            "mock1Desc": "FashionBrand A의 ROAS가 지난주 대비 15% 상승했습니다. 예산을 20% 증액하는 것을 추천합니다.",
+            "mock2Title": "CTR Drop Alert",
+            "mock2Desc": "Brand Awareness 캠페인의 클릭률이 급락했습니다. 광고 소재 교체가 시급합니다."
+        },
+        "performanceChart": {
+            "clicks": "클릭 (Clicks)",
+            "conversions": "전환 (Conversions)",
+            "empty": "차트를 그릴 활성 캠페인 데이터가 없습니다."
+        },
+        "mediaChart": {
+            "totalBudget": "총 예산",
+            "avgRoas": "평균 ROAS",
+            "empty": "차트를 그릴 활성 매체 데이터가 없습니다."
+        }
+    },
+    "CampaignList": {
+        "title": "캠페인 목록",
+        "listView": "리스트 뷰",
+        "boardView": "보드 뷰",
+        "downloadCsv": "CSV 다운로드",
+        "addCampaign": "캠페인 추가",
+        "deleteSuccess": "캠페인이 성공적으로 삭제되었습니다.",
+        "deleteError": "캠페인 삭제에 실패했습니다.",
+        "optimizeLoading": "AI가 데이터를 분석하여 최적화 중입니다...",
+        "optimizeSuccess": "AI 예산 최적화가 완료되었습니다!",
+        "optimizeError": "AI 최적화에 실패했습니다.",
+        "noDataDownload": "다운로드할 데이터가 없습니다.",
+        "downloadStart": "CSV 파일 다운로드가 시작되었습니다."
+    },
+    "CampaignKanban": {
+        "budget": "예산",
+        "dragHere": "카드를 이곳으로 드래그하세요",
+        "statusChanged": "상태 변경됨: {status}",
+        "permissionError": "권한이 없습니다: 상태를 변경할 수 없습니다.",
+        "cols": {
+            "draft": "기획 (Draft)",
+            "approval": "결재 대기 (Approval)",
+            "active": "진행 중 (Active)",
+            "ended": "보류/종료 (Ended)"
+        }
+    },
+    "CampaignTable": {
+        "empty": "등록된 캠페인이 없습니다.",
+        "columns": {
+            "name": "캠페인명",
+            "advertiser": "광고주",
+            "budget": "예산 (KRW)",
+            "roas": "ROAS",
+            "status": "상태",
+            "actions": "관리"
+        },
+        "statusMap": {
+            "active": "진행 중",
+            "paused": "일시정지",
+            "ended": "종료",
+            "draft": "기획",
+            "pending_approval": "결재 대기",
+            "rejected": "반려"
+        },
+        "viewOnly": "보기 전용",
+        "confirmDelete": "정말로 '{name}' 캠페인을 삭제하시겠습니까?",
+        "confirmOptimize": "'{name}' 캠페인을 AI로 최적화(예산/상태 변경) 하시겠습니까?"
+    },
+    "Billing": {
+        "title": "결제 및 구독",
+        "description": "워크스페이스 플랜, 결제 내역, 팀 사용량을 관리하세요.",
+        "currentPlanBadge": "현재 플랜",
+        "currentPlanLabel": "현재 플랜: Starter (무료)",
+        "usageMessage": "현재 무료 제공되는 3개의 캠페인 중 2개를 사용 중입니다.",
+        "starter": {
+            "title": "Starter",
+            "description": "개인 및 사이드 프로젝트에 완벽합니다.",
+            "features": [
+                "1 User Seat",
+                "최대 3개 캠페인",
+                "AI 예산 최적화 미지원",
+                "커스텀 분석 미지원"
+            ]
+        },
+        "pro": {
+            "title": "Pro",
+            "badge": "인기",
+            "description": "소규모 팀 및 성장하는 에이전시에 적합합니다.",
+            "features": [
+                "최대 5 User Seats",
+                "무제한 캠페인",
+                "AI 예산 최적화 지원",
+                "슬랙 봇 알림"
+            ],
+            "upgrade": "Pro로 업그레이드"
+        },
+        "enterprise": {
+            "title": "Enterprise",
+            "description": "대규모 비즈니스 및 맞춤형 요구사항에 적합합니다.",
+            "price": "별도 문의",
+            "features": [
+                "무제한 User Seats",
+                "무제한 캠페인",
+                "전담 어카운트 매니저 배정",
+                "SSO & 고급 보안 제어"
+            ],
+            "contactSales": "영업팀 문의"
+        },
+        "paymentMethods": {
+            "title": "결제 수단",
+            "add": "기본 결제 수단 추가"
+        },
+        "toast": {
+            "setup": "{planName} 결제를 셋업하는 중입니다...",
+            "pending": "결제 연동이 준비중입니다."
+        }
+    },
+    "Reports": {
+        "title": "커스텀 리포트",
+        "description": "클라이언트를 위한 화이트 라벨 리포트를 생성하고 예약합니다.",
+        "newTemplate": "새 템플릿",
+        "builderTitle": "리포트 빌더",
+        "reportTitle": "리포트 제목",
+        "reportTitlePlaceholder": "월간 성과 보고서 - {brandName}",
+        "metricsTitle": "포함할 지표",
+        "metrics": {
+            "spend": "총 광고비",
+            "impressions": "노출수",
+            "clicks": "클릭수",
+            "conversions": "전환수",
+            "roas": "ROAS",
+            "cpc": "클릭당 비용 (CPC)"
+        },
+        "dateRangeTitle": "기간 설정",
+        "dateRanges": {
+            "last30": "최근 30일",
+            "thisMonth": "이번 달",
+            "lastQuarter": "지난 분기",
+            "ytd": "올해 누적 (YTD)"
+        },
+        "deliveryTitle": "전송 방법",
+        "deliveryMethods": {
+            "emailPdf": "이메일 & PDF 첨부",
+            "link": "대시보드 링크만 전송",
+            "download": "PDF 다운로드"
+        },
+        "recipientTitle": "수신자 이메일",
+        "recipientPlaceholder": "client@clientcompany.com",
+        "previewBtn": "미리보기",
+        "generateBtn": "생성 및 전송",
+        "generating": "생성 중...",
+        "success": "리포트가 성공적으로 생성되었으며 전송 대기열에 추가되었습니다!",
+        "previewBoxTitle": "화이트 라벨 미리보기",
+        "previewSubtitle": "마케팅 인사이트 리포트",
+        "previewHelp": "리포트는 귀하의 커스텀 로고와 브랜드 색상으로 생성됩니다.",
+        "scheduledTitle": "예약된 리포트",
+        "active": "활성"
+    },
+    "Users": {
+        "title": "팀원 관리 (Users)",
+        "description": "조직 내 팀원들의 권한을 확인하고 관리하세요.",
+        "inviteBtn": "팀원 초대",
+        "directoryTitle": "팀원 목록",
+        "directoryDesc": "이 조직에 등록된 모든 팀원을 조회하고 관리합니다.",
+        "table": {
+            "member": "팀원",
+            "role": "역할",
+            "status": "상태",
+            "lastActive": "최근 활동",
+            "actions": "관리",
+            "active": "활성",
+            "pending": "대기 중",
+            "recently": "최근",
+            "admin": "Admin (최고 관리자)",
+            "editor": "Editor (편집자)",
+            "viewer": "Viewer (조회 권한)",
+            "remove": "내보내기",
+            "empty": "조직에 등록된 멤버가 없습니다.",
+            "loading": "팀원 목록을 불러오는 중...",
+            "confirmRemove": "정말 {name}님을 조직에서 내보내시겠습니까?",
+            "removeSuccess": "{name}님이 내보내졌습니다."
+        },
+        "invite": {
+            "title": "팀원 초대",
+            "description": "이메일 주소와 역할을 설정하여 조직에 새로운 팀원을 초대합니다.",
+            "email": "이메일 주소",
+            "emailPlaceholder": "colleague@company.com",
+            "role": "역할 (Role)",
+            "roleAdmin": "Admin (최고 관리자)",
+            "roleEditor": "Editor (캠페인 편집자)",
+            "roleViewer": "Viewer (읽기 전용)",
+            "cancel": "취소",
+            "submit": "초대 메일 발송",
+            "submitting": "전송 중...",
+            "missingEmail": "이메일을 입력해주세요.",
+            "success": "{email} 주소로 초대 메일이 발송되었습니다."
+        }
+    }
+}

@@ -339,3 +339,53 @@
   - `src/components/layout/Sidebar.tsx` 및 `settings/layout.tsx`: 전역 사이드바 구조상 Settings Layout 탭 메뉴에 **Audit Logs**와 **Enterprise Security** 서브 내비게이션 요소 추가.
   - `/settings/security` (Security Page): SAML 2.0 Identity Provider(Okta, Azure AD 등) 세팅용 엔터프라이즈 SSO 폼 뷰 컴포넌트 개발 완료.
   - `/settings/audit` (Audit Page): `/audit/logs` API를 Fetch하여 타임스탬프, 유저 ID, 수행 액션(CREATE/DELETE/UPDATE)을 데이터테이블로 한눈에 보여주는 감사 이력 대시보드 구조 완성.
+
+---
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 15 & 버그 픽스 (인증 자동화 및 UI 디테일 개선)
+- **로컬-운영 환경 토큰 불일치 (401 Unauthorized) 자동화 핸들링**:
+  - 기존에는 Render 배포 서버에서 발급받은 쿠키(JWT)를 로컬 FastAPI 서버로 전송할 경우 비밀키(`SECRET_KEY`) 불일치로 API가 `401 Invalid Token` 에러를 응답하여 대시보드 화면이 정지되는 심각한 결함 존재.
+  - `src/app/(dashboard)/page.tsx`와 `src/app/actions/analytics.ts` 내의 데이터 페칭(Fetch) 함수에서 응답 코드 `401`을 감지할 시, **전역 `logout()` 서버 액션을 자동 호출하여 기존 쿠키를 즉각 삭제하고 로그인 화면으로 유저를 강제 리다이렉트(Self-Healing)** 시키는 글로벌 인증 예외 처리 패턴 도입.
+- **특정 유저 관리자(Admin) 권한 부여**:
+  - SQLite Database 버그 디버깅 및 직접 마이그레이션을 통해 `pgt2003@naver.com` 계정의 `role` 컬럼을 `viewer`에서 `admin` 권한으로 업데이트.
+- **다크 모드 로그인/회원가입 UI 시인성(Visibility) 버그 픽스**:
+  - 다크 모드 적용 시 로그인 페이지(`login/page.tsx`)와 회원가입 페이지(`register/page.tsx`)의 인풋 박스가 흰색 배경(`bg-white`)임에도 불구하고 텍스트 컬러가 지정되지 않아 글씨가 하얗게 출력되는 '보이지 않는 글씨' UI 결함 확인.
+  - 강제적으로 텍스트가 어둡게 노출되도록 인풋 요소에 `text-gray-900 dark:text-gray-900` 유틸리티 오버라이드. 아울러 다크 모드 시 라벨 텍스트와 타이틀이 잘 읽히도록 `dark:text-white`, `dark:text-gray-300` 클래스 매핑 완료.
+
+---
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] Phase 16: 모바일 네이티브 대응 및 PWA (Mobile App & Push)
+- **PWA 아키텍처 도입 (Serwist)**:
+  - 데스크탑 전용으로 보이던 웹 앱을 스마트폰 홈 화면에 설치할 수 있도록 `@serwist/next` 패키지(구 next-pwa) 및 Service Worker(`sw.ts`) 아키텍처 연동 완료.
+  - `manifest.json`을 작성하고 확장 가능한 고화질 SVG 로고(`icon.svg`)를 주입하여 네이티브 앱 같은 체감성을 위한 기반을 다짐.
+  - 프로덕션 빌드(Turbopack 제외) 및 런타임 호환성 검증을 마쳐 브라우저 설치 권장(`Install App`) 프롬프트 발동 요건을 충족.
+- **모바일 스와이프 제스처 (Framer Motion)**:
+  - 데스크탑에서는 거대한 Table로 보이는 캠페인 시트를 모바일 뷰 에서는 직관적인 카드 뷰(`SwipeableCampaignCard.tsx`)로 자동 변환.
+  - Framer Motion의 `drag="x"` 속성을 활용하여, 모바일 환경에서 카드를 왼쪽으로 밀면(Swipe) 카드 뒷면에 숨겨져 있던 **AI 최적화(Bot)** 와 **삭제(Trash)** 플로팅 액션 버튼이 탄성 있게 밀려 나오는 현대화된 핑거 액션 UX 구현 완료.
+- **긴급 푸시 알림 권한 획득 토글 (Web Push)**:
+  - `/settings/security` (또는 전반적인 Settings 레이아웃 영역)에 사용자가 브라우저 OS 알림 권한을 승인(Grant)할 수 있는 직관적인 커스텀 토글 컴포넌트(`PushNotificationToggle.tsx`) 부착.
+  - `Notification.requestPermission()` 네이티브 API와 연동되어, 거부(Denied) 상태 감지 등 예외 처리와 로컬 테스트용 브라우저 네이티브 팝업 발송 검증 성공.
+
+## [$(date '+%Y-%m-%d %H:%M:%S')] 추가 작업 - Phase 17: 대시보드 화면 블랭크(Blank) 및 렌더링 지연 해결
+- **문제 인식**: 다국어(i18n) 설정과 `next-intl` 라우팅이 연동되면서, 대시보드의 중앙 컨텐츠(`/ko` 등)가 투명도 0(빈 화면)으로 나타나거나 "데이터를 실시간으로 가져오는 중입니다..." 무한 로딩에 빠지는 심각한 버그 발생.
+- **원인 분석**:
+  - `DashboardContent`, `PerformanceChart` 내부의 `isMounted`, `isReady` 훅과 900ms `setTimeout`이 SSR 및 클라이언트 Hydration 트랜지션과 충돌하여 렌더링 타이밍을 영구히 상실.
+  - 무료 티어 백엔드(Render.com)의 콜드 스타트 지연(약 50초)으로 인해 서버 컴포넌트(`page.tsx`)의 `getCampaigns`, `getAnalyticsData` Fetch 동작이 무한정 대기 상태에 빠짐.
+- **조치 내역 (UI 렌더링 정상화)**:
+  - 렌더링 지연을 유발하는 모든 인위적인 상태 타이머와 `opacity-0` 초기화 코드를 완전히 걷어내어 대시보드 진입 시 즉시 즉각적인 페인팅(Painting) 허용.
+- **백엔드 Fetch 타임아웃 펄백(Fallback)**:
+  - `page.tsx` 및 `analytics.ts`의 `fetch` 함수에 `AbortController`를 주입하여 3초 Timeout 설정.
+  - 백엔드가 3초 내에 응답하지 않는 경우(서버 웜업 중), 브라우저가 정지하지 않도록 Mock Data(가상 데이터) 객체를 에러 대신 반환(Return)하여 정상적인 대시보드 시각화 보장.
+- **추가 검증**:
+  - `next-intl`의 국가 접두사 라우팅(`/ko`, `/en`)으로 인해 사이드바(`Sidebar.tsx`) 네비게이션 액티브 탭 하이라이트가 깨지던 현상을 정규식을 통한 경로 매칭 유틸리티를 추가하여 깔끔하게 수정.
+
+## [2026-03-05 12:45:00] 추가 작업 - Phase 17.5: UI 컴포넌트 폴리싱 및 Appearance 버그 수정
+- **카드 헤더 그라데이션 및 디자인 통일성 개선**:
+  - `General Settings` (일반 설정), `Webhook Integrations` (외부 메신저 연동), `Audit Logs` (불변 감사 로그), `AnomalyAlerts` (조치 필요) 카드의 헤더에 있던 투박한 단색/그라데이션 배경을 제거.
+  - 프리미엄 카드 UI(Glassmorphism Icon Glows) 기준에 맞추어 `color-mix`와 `box-shadow`를 활용한 빛나는 아이콘과 깨끗한 화이트 라운딩 헤더로 전면 리팩토링 완료.
+- **카드 컨테이너 높이(Padding) 최적화**:
+  - `Settings` 페이지의 카드들이 다른 컴포넌트(리포트 빌더 등)에 비해 위아래 여백(`pt-6 pb-5`)이 넓어 두꺼워 보이는 현상을 수정.
+  - 상하 여백을 `py-4`로 줄이고 아이콘 패딩을 `p-2`로 알맞게 축소하여 콤팩트하고 세련된 비율로 일치시킴.
+- **테마 색상(Appearance) 팔레트 투명화 버그 수정**:
+  - `/settings/appearance`의 "기본 브랜드 색상" 7가지 프리셋 버튼이 Tailwind 동적 클래스 컴파일 누락으로 인해 투명한 박스로만 렌더링되던 버그 수정.
+  - 버튼 요소에 직접 `style={{ backgroundColor: color.hex }}` 인라인 속성을 부여하여 사용자가 7가지 브랜딩 컬러 팔레트들을 직관적으로 보고 선택할 수 있도록 데이터 및 뷰어 완전 복구 조치.

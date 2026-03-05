@@ -1,0 +1,360 @@
+{
+    "Settings": {
+        "title": "Settings",
+        "description": "Manage your settings.",
+        "general": {
+            "title": "General Settings",
+            "description": "Manage workspace info and notification settings.",
+            "workspaceName": "Workspace Name",
+            "contactEmail": "Contact Email"
+        },
+        "webhook": {
+            "title": "Integration",
+            "description": "Connect external messengers to receive risk signals and reports detected by AI Insight.",
+            "slackTitle": "Slack Incoming Webhook",
+            "slackPlaceholder": "Enter Slack Webhook URL",
+            "slackHelp": "Enter the Incoming Webhook URL issued from the Slack app settings.",
+            "kakaoTitle": "Kakao Alimtalk Host Key",
+            "kakaoPlaceholder": "Enter BizMessage API Key",
+            "kakaoHelp": "Requires an official Alimtalk Delivery API key with business authentication completed.",
+            "save": "Save Settings",
+            "saving": "Saving...",
+            "success": "Notification integration settings saved.",
+            "error": "Failed to save settings."
+        },
+        "layout": {
+            "title": "Settings",
+            "description": "Configure your organization preferences and billing details.",
+            "saveChanges": "Save Changes",
+            "tabs": {
+                "general": "General",
+                "appearance": "Appearance",
+                "security": "Enterprise Security",
+                "audit": "Audit Logs"
+            }
+        },
+        "appearance": {
+            "title": "Appearance",
+            "description": "Customize the look and feel of your dashboard. Changes are saved automatically and applied globally. (White-labeling)",
+            "brandIdentity": "Brand Identity",
+            "companyName": "Company / App Name",
+            "companyNamePlaceholder": "Acme Corp",
+            "save": "Save",
+            "companyNameHelp": "This name will appear on the top left sidebar and in custom reports.",
+            "themeColor": "Theme Color",
+            "primaryBrandColor": "Primary brand color",
+            "customHexColor": "Custom Hex Color",
+            "apply": "Apply",
+            "colorPreview": "Color Preview",
+            "colorPreviewDesc": "UI elements like buttons, active navigation, and charts will use this brand color to give your dashboard a cohesive whitelist feel. Note: Due to Tailwind's JIT compiler, exact preset color shades require modifying CSS variables in production.",
+            "resetSettings": "Reset all appearance settings",
+            "resetConfirm": "Are you sure you want to reset all appearance settings to default?",
+            "resetToast": "Appearance settings reset to default.",
+            "nameEmptyToast": "Brand name cannot be empty",
+            "nameUpdatedToast": "Brand name updated!",
+            "hexInvalidToast": "Invalid Hex Code format (e.g. #FF5733)",
+            "themeUpdatedToast": "Theme updated to custom color {hex}!",
+            "themeTranslatedToast": "Theme translated to {label}!"
+        },
+        "audit": {
+            "title": "Immutable Audit Logs",
+            "description": "A persistent, tamper-evident record of all major system events in your organization.",
+            "searchPlaceholder": "Search resource or action...",
+            "filterLog": "Filter Log",
+            "empty": "No audit logs found for this organization.",
+            "columns": {
+                "timestamp": "Timestamp",
+                "actorId": "Actor ID",
+                "action": "Action",
+                "resource": "Resource / Context",
+                "ipAddress": "IP Address"
+            },
+            "userPrefix": "User #{id}"
+        },
+        "security": {
+            "title": "Enterprise Security & SSO",
+            "description": "Manage Single Sign-On (SSO) and enforce security policies across your entire organization.",
+            "samlTitle": "SAML 2.0 Configuration",
+            "samlDescription": "Connect your identity provider (IdP) such as Okta, Azure AD, or Google Workspace.",
+            "idpLabel": "Identity Provider Entity ID",
+            "ssoLabel": "SSO URL (Login Endpoint)",
+            "certLabel": "X.509 Certificate",
+            "saveSso": "Save SSO Configuration",
+            "savingSso": "Saving Configuration...",
+            "successToast": "SSO configuration updated successfully.",
+            "helpTitle": "Need help with Enterprise setup?",
+            "helpDesc": "For custom SAML mapping, SCIM user provisioning, or dedicated VPN tunnels, please contact your dedicated Enterprise Technical Account Manager.",
+            "push": {
+                "unsupported": "This browser does not support push notifications.",
+                "alreadyGranted": "Push notifications are already allowed. Block them in your OS settings if necessary.",
+                "successTitle": "B2B SaaS Dashboard",
+                "successBody": "Push notifications have been successfully mapped! You can now receive important alerts like ROAS drops.",
+                "success": "Push notifications are activated!",
+                "denied": "Push notification permission denied. Please allow it in your browser settings.",
+                "error": "An error occurred while requesting permission.",
+                "title": "Emergency Push Notifications (Web Push)",
+                "description": "Receive anomaly alerts for campaign budgets and performance on your smartphone or desktop even when the browser or app is closed.",
+                "blocked": "Notification permission is blocked in your browser settings. Please refresh after changing the settings."
+            }
+        }
+    },
+    "Auth": {
+        "login": "Log in",
+        "logout": "Log out",
+        "loginForm": {
+            "title": "B2B SaaS Dashboard",
+            "subtitle": "Log in to your account to manage marketing performance",
+            "email": "Email",
+            "password": "Password",
+            "submitBtn": "Login",
+            "submitting": "Logging in...",
+            "noAccount": "Don't have an account?",
+            "signUpLink": "Sign Up",
+            "invalidCreds": "Invalid email or password.",
+            "error": "An error occurred during login."
+        },
+        "registerForm": {
+            "title": "Sign Up",
+            "subtitle": "Create a new organization or join an existing one",
+            "orgId": "Organization ID",
+            "orgHelp": "Data is separated based on the Organization ID.",
+            "email": "Email",
+            "password": "Password",
+            "submitBtn": "Create Account",
+            "submitting": "Creating account...",
+            "hasAccount": "Already have an account?",
+            "loginLink": "Login",
+            "error": "An error occurred during registration."
+        }
+    },
+    "Navigation": {
+        "dashboard": "Dashboard",
+        "reports": "Reports",
+        "users": "Users",
+        "settings": "Settings",
+        "billing": "Billing",
+        "overview": "Overview"
+    },
+    "Dashboard": {
+        "totalSpend": "Total Ad Spend",
+        "projectedEom": "Projected EOM: {amount}",
+        "avgRoas": "Avg. ROAS",
+        "avgAcross": "Average across campaigns",
+        "estConversions": "Est. Conversions",
+        "estFromBudget": "Estimated from ad budget",
+        "activeCampaigns": "Active Campaigns",
+        "currentlyRunning": "Currently running",
+        "summaryTitle": "Dashboard Summary",
+        "summaryDesc": "Monitor your ad campaigns and key metrics centrally",
+        "trendcastingTitle": "Trendcasting (Smart Budget Prediction)",
+        "trendcastingDesc": "7-day linear regression forecast based on recent ad spend",
+        "performanceTitle": "Performance Insights",
+        "performanceDesc": "ROAS and estimated conversions trend graph",
+        "mediaTitle": "Media Efficiency Comparison",
+        "mediaDesc": "ROAS distribution against campaign budget",
+        "anomaly": {
+            "loading": "Simulated Anomaly Prediction",
+            "noAlertsTitle": "Anomaly Alerts",
+            "noAlertsDesc": "No recent anomalies detected. Campaigns are running normally.",
+            "actionRequired": "Action Required ({count})",
+            "reviewNeeded": "Review Needed",
+            "metric": "(Metric: {metric})",
+            "dropEstimate": "Estimated Drop: {value}"
+        },
+        "insights": {
+            "title": "AI Performance Insights",
+            "mock1Title": "Budget Optimization",
+            "mock1Desc": "FashionBrand A's ROAS increased by 15% from last week. We recommend increasing the budget by 20%.",
+            "mock2Title": "CTR Drop Alert",
+            "mock2Desc": "CTR for Brand Awareness campaign dropped sharply. Urgent ad creative replacement is required."
+        },
+        "performanceChart": {
+            "clicks": "Clicks",
+            "conversions": "Conversions",
+            "empty": "No active campaigns to draw the chart."
+        },
+        "mediaChart": {
+            "totalBudget": "Total Budget",
+            "avgRoas": "Avg ROAS",
+            "empty": "No active media data to draw the chart."
+        }
+    },
+    "CampaignList": {
+        "title": "Campaign List",
+        "listView": "List View",
+        "boardView": "Board View",
+        "downloadCsv": "Download CSV",
+        "addCampaign": "Add Campaign",
+        "deleteSuccess": "Campaign successfully deleted.",
+        "deleteError": "Failed to delete campaign.",
+        "optimizeLoading": "AI is analyzing data for optimization...",
+        "optimizeSuccess": "AI budget optimization complete!",
+        "optimizeError": "Failed to optimize with AI.",
+        "noDataDownload": "No data to download.",
+        "downloadStart": "CSV file download has started."
+    },
+    "CampaignKanban": {
+        "budget": "Budget",
+        "dragHere": "Drag card here",
+        "statusChanged": "Status changed to: {status}",
+        "permissionError": "Permission denied: Cannot change status.",
+        "cols": {
+            "draft": "Draft",
+            "approval": "Approval Pending",
+            "active": "Active",
+            "ended": "Ended / Paused"
+        }
+    },
+    "CampaignTable": {
+        "empty": "No campaigns registered.",
+        "columns": {
+            "name": "Campaign Name",
+            "advertiser": "Advertiser",
+            "budget": "Budget (KRW)",
+            "roas": "ROAS",
+            "status": "Status",
+            "actions": "Actions"
+        },
+        "statusMap": {
+            "active": "Active",
+            "paused": "Paused",
+            "ended": "Ended",
+            "draft": "Draft",
+            "pending_approval": "Pending Approval",
+            "rejected": "Rejected"
+        },
+        "viewOnly": "View Only",
+        "confirmDelete": "Are you sure you want to delete campaign '{name}'?",
+        "confirmOptimize": "Optimize campaign '{name}' with AI (auto-adjust budget/status)?"
+    },
+    "Billing": {
+        "title": "Billing & Subscriptions",
+        "description": "Manage your workspace plans, billing history, and team usage.",
+        "currentPlanBadge": "Current Plan",
+        "currentPlanLabel": "Current Plan: Starter (Free)",
+        "usageMessage": "You are currently using 2 of 3 available campaigns on this free tier.",
+        "starter": {
+            "title": "Starter",
+            "description": "Perfect for individuals and side projects.",
+            "features": [
+                "1 User Seat",
+                "Up to 3 Campaigns",
+                "No AI Budget Optimizer",
+                "No Custom Analytics"
+            ]
+        },
+        "pro": {
+            "title": "Pro",
+            "badge": "Most Popular",
+            "description": "For small teams and growing agencies.",
+            "features": [
+                "Up to 5 User Seats",
+                "Unlimited Campaigns",
+                "AI Budget Optimizer",
+                "Slack Notifications"
+            ],
+            "upgrade": "Upgrade to Pro"
+        },
+        "enterprise": {
+            "title": "Enterprise",
+            "description": "For large scale operations and custom needs.",
+            "price": "Custom",
+            "features": [
+                "Unlimited User Seats",
+                "Unlimited Campaigns",
+                "Dedicated Account Manager",
+                "SSO & Advanced Security"
+            ],
+            "contactSales": "Contact Sales"
+        },
+        "paymentMethods": {
+            "title": "Payment Methods",
+            "add": "Add a primary payment method"
+        },
+        "toast": {
+            "setup": "Setting up {planName} payment...",
+            "pending": "Payment integration is coming soon."
+        }
+    },
+    "Reports": {
+        "title": "Custom Reports",
+        "description": "Generate and schedule branded white-label reports for your clients.",
+        "newTemplate": "New Template",
+        "builderTitle": "Report Builder",
+        "reportTitle": "Report Title",
+        "reportTitlePlaceholder": "Monthly Performance - {brandName}",
+        "metricsTitle": "Metrics to Include",
+        "metrics": {
+            "spend": "Total Spend",
+            "impressions": "Impressions",
+            "clicks": "Clicks",
+            "conversions": "Conversions",
+            "roas": "ROAS",
+            "cpc": "Cost Per Click (CPC)"
+        },
+        "dateRangeTitle": "Date Range",
+        "dateRanges": {
+            "last30": "Last 30 Days",
+            "thisMonth": "This Month",
+            "lastQuarter": "Last Quarter",
+            "ytd": "Year to Date"
+        },
+        "deliveryTitle": "Delivery Method",
+        "deliveryMethods": {
+            "emailPdf": "Email & PDF Attachment",
+            "link": "Dashboard Link Only",
+            "download": "Download PDF"
+        },
+        "recipientTitle": "Recipient Email",
+        "recipientPlaceholder": "client@clientcompany.com",
+        "previewBtn": "Preview",
+        "generateBtn": "Generate & Send",
+        "generating": "Generating...",
+        "success": "Report successfully generated and queued for delivery!",
+        "previewBoxTitle": "White-label Preview",
+        "previewSubtitle": "Marketing Intelligence Report",
+        "previewHelp": "Reports will be generated with your custom logo and primary color scheme.",
+        "scheduledTitle": "Scheduled Reports",
+        "active": "Active"
+    },
+    "Users": {
+        "title": "Users",
+        "description": "View and manage your team members and their roles.",
+        "inviteBtn": "Invite User",
+        "directoryTitle": "Team Directory",
+        "directoryDesc": "View and edit all users registered within this organization.",
+        "table": {
+            "member": "Member",
+            "role": "Role",
+            "status": "Status",
+            "lastActive": "Last Active",
+            "actions": "Actions",
+            "active": "Active",
+            "pending": "Pending",
+            "recently": "Recently",
+            "admin": "Admin",
+            "editor": "Editor",
+            "viewer": "Viewer",
+            "remove": "Remove",
+            "empty": "No members registered in this organization.",
+            "loading": "Loading users...",
+            "confirmRemove": "Are you sure you want to remove {name} from the organization?",
+            "removeSuccess": "{name} has been removed."
+        },
+        "invite": {
+            "title": "Invite Team Member",
+            "description": "Set up an email address and role to invite a new team member.",
+            "email": "Email Address",
+            "emailPlaceholder": "colleague@company.com",
+            "role": "Role",
+            "roleAdmin": "Admin (Super Administrator)",
+            "roleEditor": "Editor (Campaign Editor)",
+            "roleViewer": "Viewer (Read-only)",
+            "cancel": "Cancel",
+            "submit": "Send Invitation",
+            "submitting": "Sending...",
+            "missingEmail": "Please enter an email address.",
+            "success": "An invitation email has been sent to {email}."
+        }
+    }
+}

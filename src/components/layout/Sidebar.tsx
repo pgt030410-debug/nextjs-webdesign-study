@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Settings, Menu, X, CreditCard, FileText } from 'lucide-react';
 import { useThemeStore } from '@/store/useThemeStore';
+import { useTranslations } from 'next-intl';
 
 interface NavItem {
   label: string;
@@ -12,18 +13,25 @@ interface NavItem {
   icon: React.ElementType;
 }
 
-const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { label: 'Reports', href: '/reports', icon: FileText },
-  { label: 'Users', href: '/users', icon: Users },
-  { label: 'Settings', href: '/settings', icon: Settings },
-  { label: 'Billing', href: '/billing', icon: CreditCard },
-];
-
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { brandName, brandColor, isCustomColor } = useThemeStore();
+  const t = useTranslations('Navigation');
+
+  const navItems: NavItem[] = [
+    { label: t('dashboard'), href: '/', icon: LayoutDashboard },
+    { label: t('reports'), href: '/reports', icon: FileText },
+    { label: t('users'), href: '/users', icon: Users },
+    { label: t('settings'), href: '/settings', icon: Settings },
+    { label: t('billing'), href: '/billing', icon: CreditCard },
+  ];
+
+  // Helper to remove locale prefix from pathname for exact matching
+  const stripLocale = (path: string) => {
+    return path.replace(/^\/(ko|en)/, '') || '/';
+  };
+  const activePath = stripLocale(pathname);
 
   // Mounted check for hydration mismatch prevention
   const [mounted, setMounted] = useState(false);
@@ -67,7 +75,7 @@ const Sidebar: React.FC = () => {
         </div>
         <nav className="mt-4 flex flex-col gap-1 px-3">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = activePath === item.href;
             const Icon = item.icon;
 
             return (

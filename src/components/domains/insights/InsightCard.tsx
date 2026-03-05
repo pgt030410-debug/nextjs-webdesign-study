@@ -8,6 +8,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Sparkles, ArrowUpRight, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 interface Insight {
   id: string;
@@ -16,27 +17,28 @@ interface Insight {
   type: 'positive' | 'warning' | 'info';
 }
 
-const mockInsights: Insight[] = [
-  {
-    id: '1',
-    title: 'Budget Optimization',
-    content: 'FashionBrand A의 ROAS가 지난주 대비 15% 상승했습니다. 예산을 20% 증액하는 것을 추천합니다.',
-    type: 'positive',
-  },
-  {
-    id: '2',
-    title: 'CTR Drop Alert',
-    content: 'Brand Awareness 캠페인의 클릭률이 급락했습니다. 광고 소재 교체가 시급합니다.',
-    type: 'warning',
-  },
-];
-
 const InsightCard: React.FC = () => {
+  const t = useTranslations('Dashboard.insights');
+
+  const mockInsights: Insight[] = [
+    {
+      id: '1',
+      title: t('mock1Title'),
+      content: t('mock1Desc'),
+      type: 'positive',
+    },
+    {
+      id: '2',
+      title: t('mock2Title'),
+      content: t('mock2Desc'),
+      type: 'warning',
+    },
+  ];
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2 mb-2">
         <Sparkles size={18} style={{ color: 'var(--color-primary-brand, #3b82f6)' }} />
-        <h3 className="font-bold text-gray-900 dark:text-white">AI Performance Insights</h3>
+        <h3 className="font-bold text-gray-900 dark:text-white">{t('title')}</h3>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
         {mockInsights.map((insight) => (

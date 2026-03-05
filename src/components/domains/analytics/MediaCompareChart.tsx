@@ -10,6 +10,7 @@ import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Campaign } from '../campaigns/CampaignTable';
 import { formatKRW } from '@/lib/utils/currency';
+import { useTranslations } from 'next-intl';
 
 interface MediaCompareData {
     advertiser: string;
@@ -17,24 +18,25 @@ interface MediaCompareData {
     avgRoas: number;
 }
 
-const chartConfig = {
-    totalBudget: {
-        label: 'Total Budget (KRW)',
-        color: 'var(--color-primary-brand, #3b82f6)',
-    },
-    avgRoas: {
-        label: 'Avg. ROAS (x)',
-        color: '#f59e0b',
-    },
-};
-
 interface MediaCompareChartProps {
     campaigns: Campaign[];
 }
 
 const MediaCompareChart: React.FC<MediaCompareChartProps> = ({ campaigns }) => {
     const { theme } = useTheme();
+    const t = useTranslations('Dashboard.mediaChart');
     const [isReady, setIsReady] = React.useState(false);
+
+    const chartConfig = useMemo(() => ({
+        totalBudget: {
+            label: t('totalBudget'),
+            color: 'var(--color-primary-brand, #3b82f6)',
+        },
+        avgRoas: {
+            label: t('avgRoas'),
+            color: '#f59e0b',
+        },
+    }), [t]);
 
     // Recharts rendering delay to prevent main-thread block during Framer Motion transitions
     React.useEffect(() => {
@@ -69,16 +71,10 @@ const MediaCompareChart: React.FC<MediaCompareChartProps> = ({ campaigns }) => {
         return data.sort((a, b) => b.totalBudget - a.totalBudget);
     }, [campaigns]);
 
-    if (!isReady || chartData.length === 0) {
+    if (chartData.length === 0) {
         return (
             <div className="flex h-[300px] w-full items-center justify-center text-sm text-gray-400">
-                {!isReady ? (
-                    <div className="flex animate-pulse space-x-2">
-                        <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                        <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-200"></div>
-                        <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animation-delay-400"></div>
-                    </div>
-                ) : "차트를 그릴 활성 매체 데이터가 없습니다."}
+                {t('empty')}
             </div>
         );
     }
@@ -127,14 +123,14 @@ const MediaCompareChart: React.FC<MediaCompareChartProps> = ({ campaigns }) => {
                         dataKey="totalBudget"
                         fill="var(--color-primary-brand, #3b82f6)"
                         radius={[4, 4, 0, 0]}
-                        name="Total Budget"
+                        name={t('totalBudget')}
                     />
                     <Bar
                         yAxisId="right"
                         dataKey="avgRoas"
                         fill="#f59e0b"
                         radius={[4, 4, 0, 0]}
-                        name="Avg. ROAS"
+                        name={t('avgRoas')}
                     />
                 </BarChart>
             </ChartContainer>
